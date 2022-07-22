@@ -48,10 +48,11 @@ class Ui_MainWindow(object):
         self.btn_uart_switch.setMinimumSize(QSize(24, 24))
         self.btn_uart_switch.setMaximumSize(QSize(24, 24))
         self.btn_uart_switch.setBaseSize(QSize(24, 24))
+        self.btn_uart_switch.setStyleSheet(u"padding: 2px;")
         icon = QIcon()
         icon.addFile(u"resources/start.svg", QSize(), QIcon.Normal, QIcon.Off)
         self.btn_uart_switch.setIcon(icon)
-        self.btn_uart_switch.setIconSize(QSize(24, 24))
+        self.btn_uart_switch.setIconSize(QSize(18, 18))
         self.btn_uart_switch.setFlat(True)
 
         self.gridLayout.addWidget(self.btn_uart_switch, 0, 1, 1, 1)

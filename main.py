@@ -5,11 +5,12 @@
 # @Email   : jonas.pan@signify.com
 # @File    : main
 # ---------------------
-import mainwindow
 import logging
 import coloredlogs
 import os
 import sys
+import py_mainwindow
+from PySide6.QtWidgets import QApplication
 
 
 class Main:
@@ -33,7 +34,13 @@ class Main:
     @classmethod
     def run(cls):
         cls.setup_logging()
-        mainwindow.MainWindow.run()
+        app = QApplication(sys.argv)
+        tmp = py_mainwindow.MainWindow()
+        tmp.show()
+        try:
+            sys.exit(app.exec())
+        except Exception as e:
+            logging.error(e)
 
 
 if __name__ == '__main__':

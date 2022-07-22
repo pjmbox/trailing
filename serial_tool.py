@@ -7,13 +7,14 @@
 # ---------------------
 
 import io
+import time
+
 import serial
 import serial.tools.list_ports
 import threading
 import datetime
 import logging
 import common
-import gui_agent
 
 
 class SerialTool:
@@ -27,6 +28,7 @@ class SerialTool:
         self._thread = None
         self._uart_client = None
         self.line_handlers = []
+        self.err_count_max = 8
         self.last_send_time = datetime.datetime.now()
         self.last_read_time = datetime.datetime.now()
 
@@ -69,6 +71,8 @@ class SerialTool:
             self.signal.uart_is_stopped()
             return
         self.signal.uart_is_running()
+        err = None
+        err_count = self.err_count_max
         while not self._terminated:
             try:
                 ctx = self.get_received_line_context()
@@ -78,11 +82,25 @@ class SerialTool:
                 for handler in self.line_handlers:
                     handler(ctx)
             except serial.SerialException as e:
-                logging.error('[%s] uart thread: %s' % (self.name, e))
-                logging.exception(e)
+                logging.error('[%s] [%d] uart thread: %s' % (self.name, err_count, e))
+                err = e
+            except PermissionError as e:
+                logging.error('[%s] [%d] uart thread: %s' % (self.name, err_count, e))
+                err = e
             except BaseException as e:
-                logging.error('[%s] uart thread: %s' % (self.name, e))
-                logging.exception(e)
+                logging.error('[%s] [%d] uart thread: %s' % (self.name, err_count, e))
+                err = e
+            finally:
+                if err is not None:
+                    logging.exception(err)
+                    err_count -= 1
+                    if err_count <= 0:
+                        logging.error('[%s] uart thread: too many exceptions (>%d)' % (self.name, self.err_count_max))
+                        self._terminated = True
+                        self.signal.show_alert('Error', 'too many exceptions in uart thread. %s' % err)
+                    else:
+                        time.sleep(3)
+                    err = None
         self.signal.uart_is_stopped()
         try:
             self.after_loop()

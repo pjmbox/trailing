@@ -30,3 +30,6 @@ class GuiAgent(QObject):
 
     def uart_is_stopped(self):
         self._emit_gui('uart_is_stopped', ())
+
+    def show_alert(self, title, text):
+        self._emit_gui('show_alert', (title, text))
