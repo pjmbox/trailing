@@ -19,11 +19,14 @@ import common
 
 class SerialTool:
 
-    def __init__(self, signal, name, port, baud):
+    def __init__(self, signal, name, port, baud, databit, paritybit, stopbit):
         self.signal = signal
         self.name = name
         self.port = port
         self.baud = baud
+        self.databit = databit
+        self.paritybit = paritybit
+        self.stopbit = stopbit
         self._terminated = None
         self._thread = None
         self._uart_client = None
@@ -55,7 +58,11 @@ class SerialTool:
         return common.LineContext()
 
     def pre_loop(self):
-        self._uart_client = serial.Serial(port=self.port, baudrate=self.baud)
+        self._uart_client = serial.Serial(port=self.port,
+                                          baudrate=self.baud,
+                                          bytesize=self.databit,
+                                          parity=self.paritybit,
+                                          stopbits=self.stopbit)
         self._uart_client.timeout = 30
         logging.info('[%s] uart open status is %s' % (self.name, self._uart_client.is_open))
 
@@ -69,6 +76,7 @@ class SerialTool:
         except Exception as e:
             logging.error(e)
             self.signal.uart_is_stopped()
+            self.signal.show_alert('Error', 'unexpected exceptions when open uart. %s' % e)
             return
         self.signal.uart_is_running()
         err = None
@@ -83,16 +91,18 @@ class SerialTool:
                     handler(ctx)
             except serial.SerialException as e:
                 logging.error('[%s] [%d] uart thread: %s' % (self.name, err_count, e))
+                logging.exception(e)
                 err = e
             except PermissionError as e:
                 logging.error('[%s] [%d] uart thread: %s' % (self.name, err_count, e))
+                logging.exception(e)
                 err = e
             except BaseException as e:
                 logging.error('[%s] [%d] uart thread: %s' % (self.name, err_count, e))
+                logging.exception(e)
                 err = e
             finally:
                 if err is not None:
-                    logging.exception(err)
                     err_count -= 1
                     if err_count <= 0:
                         logging.error('[%s] uart thread: too many exceptions (>%d)' % (self.name, self.err_count_max))

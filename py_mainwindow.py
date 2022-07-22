@@ -2,34 +2,41 @@ import gui_agent
 import py_uart_settings_window
 import serial_tool_ex
 import ui_mainwindow
-from PySide6.QtGui import QImage, QPixmap, QIcon
+from PySide6.QtGui import QImage, QPixmap, QIcon, QTextCursor
 from PySide6.QtWidgets import QMainWindow, QMessageBox
+from PySide6.QtCore import QTimer
 
 
 class MainWindow(ui_mainwindow.Ui_MainWindow):
-    
+
     def __init__(self):
         super(MainWindow, self).__init__()
         self.uart = None
         self.signal = None
-        self.w_settings = py_uart_settings_window.UartSettingsWindow()
-        self.widget = QMainWindow()
-        self.setupUi(self.widget)
-        self.widget.resize(800, 600)
+        self.old_vb_max = None
+        self.last_vb_max = None
+        self.win_root = QMainWindow()
+        self.setupUi(self.win_root)
+        self.win_root.resize(800, 600)
+        self.win_settings = py_uart_settings_window.UartSettingsWindow(self)
+        self.win_settings.setupUi(self.win_root)
 
     def setupUi(self, main_window):
         super(MainWindow, self).setupUi(main_window)
         self.btn_uart_switch.clicked.connect(self.switch_uart)
-        self.btn_uart_settings.toggled.connect(self.uart_settings)
+        self.btn_uart_settings.toggled.connect(self.switch_uart_settings)
+        self.btn_screen_down.toggled.connect(self.switch_screen_auto_scroll)
+        self.btn_max_line.toggled.connect(self.switch_max_line)
+        self.textEdit.verticalScrollBar().rangeChanged.connect(self.adjust_scrollbar)
         self.textEdit.document().setMaximumBlockCount(1000)
+        self.old_vb_max = self.textEdit.verticalScrollBar().maximum()
+        self.last_vb_max = self.old_vb_max
         self.signal = gui_agent.GuiAgent()
         self.signal.connect_gui(self._gui_agent)
-        self.w_settings.widget.setParent(main_window)
-        self.w_settings.hide()
 
     # misc gui functions
     def show(self):
-        self.widget.show()
+        self.win_root.show()
 
     @staticmethod
     def set_icon(wgt, fn):
@@ -39,20 +46,39 @@ class MainWindow(ui_mainwindow.Ui_MainWindow):
         self.textEdit.document().setMaximumBlockCount(n)
 
     # windows signal handle functions
-    def uart_settings(self, v):
+    def adjust_scrollbar(self, _, m):
+        if not self.btn_screen_down.isChecked() and m < self.old_vb_max:
+            tmp = self.textEdit.verticalScrollBar().value() - (self.old_vb_max - m)
+            QTimer.singleShot(0, lambda: self.textEdit.verticalScrollBar().setValue(max(tmp, 0)))
+        if m > self.last_vb_max:
+            self.old_vb_max = m
+        self.last_vb_max = m
+
+    def switch_max_line(self, v):
+        pass
+
+    def switch_screen_auto_scroll(self, v):
+        if v:
+            self.textEdit.moveCursor(QTextCursor.End)
+
+    def switch_uart_settings(self, v):
         if v:
             x = self.btn_uart_settings.x()
             y = self.btn_uart_settings.y()
-            self.w_settings.set_position(x, y + 300)
-            self.w_settings.show()
+            h = self.btn_uart_switch.height()
+            self.win_settings.move(x + 1, y + h + 4)
+            self.win_settings.show()
         else:
-            self.w_settings.hide()
+            self.win_settings.hide()
 
     def switch_uart(self):
         if self.uart is None:
+            if self.btn_uart_settings.isChecked():
+                self.btn_uart_settings.setChecked(False)
             self.btn_uart_switch.setEnabled(False)
             self.btn_uart_settings.setEnabled(False)
-            self.uart = serial_tool_ex.SerialToolEx(self.signal, 'TextCom', 'COM3', 115200)
+            p, b, db, pb, sb = self.win_settings.get_settings()
+            self.uart = serial_tool_ex.SerialToolEx(self.signal, p.lower(), p, b, db, pb, sb)
             self.uart.start()
         else:
             self.btn_uart_switch.setEnabled(False)
@@ -64,9 +90,14 @@ class MainWindow(ui_mainwindow.Ui_MainWindow):
         m(*args)
 
     def append_log(self, dt, dirs, text):
+        old_pos = self.textEdit.verticalScrollBar().value()
         tmp = dt.strftime('%Y-%m-%d %H:%M:%S.%f')
         tmp = '%s %s %s' % (tmp, dirs.value, text)
         self.textEdit.append(tmp)
+        if self.btn_screen_down.isChecked():
+            self.textEdit.moveCursor(QTextCursor.End)
+        else:
+            self.textEdit.verticalScrollBar().setValue(old_pos)
 
     def uart_is_running(self):
         self.set_icon(self.btn_uart_switch, 'resources/stop')

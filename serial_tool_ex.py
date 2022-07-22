@@ -14,8 +14,8 @@ import os
 
 class SerialToolEx(serial_tool.SerialTool):
 
-    def __init__(self, signal, name, port, baud):
-        super(SerialToolEx, self).__init__(signal, name, port, baud)
+    def __init__(self, signal, name, port, baud, databit, paritybit, stopbit):
+        super(SerialToolEx, self).__init__(signal, name, port, baud, databit, paritybit, stopbit)
         self.encoding = 'ascii'
         self.error_policy = 'ignore'
         self.serial_log_filename = 'log' + os.sep + '%s_%s.log' % (name, datetime.datetime.now().strftime('%Y%m%d'))
