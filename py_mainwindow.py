@@ -1,5 +1,10 @@
-import logging
-
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+# @Time    : 7/18/2022 2:56 PM
+# @Author  : jonas pan
+# @Email   : jonas.pan@signify.com
+# @File    : py_mainwindow.py
+# ---------------------
 import gui_agent
 import py_uart_settings_window
 import serial_tool_ex
@@ -25,18 +30,23 @@ class MainWindow(ui_mainwindow.Ui_MainWindow):
 
     def setupUi(self, main_window):
         super(MainWindow, self).setupUi(main_window)
+
         self.btn_uart_switch.clicked.connect(self.switch_uart)
         self.btn_uart_settings.toggled.connect(self.switch_uart_settings)
         self.btn_screen_down.toggled.connect(self.switch_screen_auto_scroll)
         self.btn_max_line.toggled.connect(self.switch_max_line)
-        self.textEdit.verticalScrollBar().valueChanged.connect(self.vb_change)
+        self.btn_uart_clear.clicked.connect(self.clear_uart_log)
 
-        self.textEdit.document().setMaximumBlockCount(500)
         if not self.btn_screen_down.isChecked():
             self.last_vb_max = self.textEdit.verticalScrollBar().maximum()
+            self.tgt_vb_pos = self.textEdit.verticalScrollBar().value()
+            self.textEdit.verticalScrollBar().rangeChanged.connect(self.textedit_vb_range_changed)
+            self.textEdit.verticalScrollBar().valueChanged.connect(self.textedit_vb_value_changed)
 
         self.signal = gui_agent.GuiAgent()
         self.signal.connect_gui(self._gui_agent)
+
+        self.textEdit.document().setMaximumBlockCount(500)
 
     # misc gui functions
     def show(self):
@@ -49,11 +59,14 @@ class MainWindow(ui_mainwindow.Ui_MainWindow):
     def set_max_lines(self, n):
         self.textEdit.document().setMaximumBlockCount(n)
 
+    def clear_uart_log(self):
+        self.textEdit.clear()
+
     # windows signal handle functions
-    def vb_change(self, p):
+    def textedit_vb_value_changed(self, p):
         self.tgt_vb_pos = p
 
-    def adjust_scrollbar(self, _, m):
+    def textedit_vb_range_changed(self, _, m):
         if m < self.last_vb_max:
             self.tgt_vb_pos = max(self.tgt_vb_pos - (self.last_vb_max - m), 0)
             QTimer.singleShot(0, lambda: self.textEdit.verticalScrollBar().setValue(self.tgt_vb_pos))
@@ -62,10 +75,13 @@ class MainWindow(ui_mainwindow.Ui_MainWindow):
     def switch_screen_auto_scroll(self, v):
         if v:
             self.textEdit.moveCursor(QTextCursor.End)
-            self.textEdit.verticalScrollBar().rangeChanged.disconnect(self.adjust_scrollbar)
+            self.textEdit.verticalScrollBar().rangeChanged.disconnect(self.textedit_vb_range_changed)
+            self.textEdit.verticalScrollBar().valueChanged.disconnect(self.textedit_vb_value_changed)
         else:
             self.last_vb_max = self.textEdit.verticalScrollBar().maximum()
-            self.textEdit.verticalScrollBar().rangeChanged.connect(self.adjust_scrollbar)
+            self.tgt_vb_pos = self.textEdit.verticalScrollBar().value()
+            self.textEdit.verticalScrollBar().rangeChanged.connect(self.textedit_vb_range_changed)
+            self.textEdit.verticalScrollBar().valueChanged.connect(self.textedit_vb_value_changed)
 
     def switch_max_line(self, v):
         pass
