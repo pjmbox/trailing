@@ -5,13 +5,13 @@
 # @Email   : jonas.pan@signify.com
 # @File    : win_uart_settings
 # ---------------------
-import ui_uart_settings_window
+import ui_uart_settings
 import serial.tools.list_ports
 from PySide6.QtWidgets import QGroupBox
 from PySide6.QtCore import QTimer
 
 
-class UartSettingsWindow(ui_uart_settings_window.Ui_UartSettingsWindow):
+class UartSettingsWindow(ui_uart_settings.Ui_UartSettingsWindow):
 
     def __init__(self, p_main):
         super(UartSettingsWindow, self).__init__()

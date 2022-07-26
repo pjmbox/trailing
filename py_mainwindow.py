@@ -6,7 +6,8 @@
 # @File    : py_mainwindow.py
 # ---------------------
 import gui_agent
-import py_uart_settings_window
+import py_uart_settings
+import py_gui_max_rows
 import serial_tool_ex
 import ui_mainwindow
 from PySide6.QtGui import QImage, QPixmap, QIcon, QTextCursor
@@ -26,8 +27,10 @@ class MainWindow(ui_mainwindow.Ui_Trailing):
         self.setupUi(self.win_root)
         self.win_root.setWindowTitle('Trailing')
         self.win_root.resize(800, 600)
-        self.win_settings = py_uart_settings_window.UartSettingsWindow(self)
-        self.win_settings.setupUi(self.win_root)
+        self.uart_settings = py_uart_settings.UartSettingsWindow(self)
+        self.uart_settings.setupUi(self.win_root)
+        self.gui_max_rows = py_gui_max_rows.GuiMaxRowsWindow(self)
+        self.gui_max_rows.setupUi(self.win_root)
 
     def setupUi(self, main_window):
         super(MainWindow, self).setupUi(main_window)
@@ -46,7 +49,6 @@ class MainWindow(ui_mainwindow.Ui_Trailing):
 
         self.signal = gui_agent.GuiAgent()
         self.signal.connect_gui(self._gui_agent)
-
         self.textEdit.document().setMaximumBlockCount(500)
 
     # misc gui functions
@@ -59,6 +61,9 @@ class MainWindow(ui_mainwindow.Ui_Trailing):
 
     def set_max_lines(self, n):
         self.textEdit.document().setMaximumBlockCount(n)
+
+    def get_max_lines(self):
+        return self.textEdit.document().maximumBlockCount()
 
     def clear_uart_log(self):
         self.textEdit.clear()
@@ -73,6 +78,12 @@ class MainWindow(ui_mainwindow.Ui_Trailing):
             QTimer.singleShot(0, lambda: self.textEdit.verticalScrollBar().setValue(self.tgt_vb_pos))
         self.last_vb_max = m
 
+    def switch_off_all(self):
+        if self.btn_uart_settings.isChecked():
+            self.btn_uart_settings.setChecked(False)
+        if self.btn_max_line.isChecked():
+            self.btn_max_line.setChecked(False)
+
     def switch_screen_auto_scroll(self, v):
         if v:
             self.textEdit.moveCursor(QTextCursor.End)
@@ -85,25 +96,33 @@ class MainWindow(ui_mainwindow.Ui_Trailing):
             self.textEdit.verticalScrollBar().valueChanged.connect(self.textedit_vb_value_changed)
 
     def switch_max_line(self, v):
-        pass
+        if v:
+            if self.btn_uart_settings.isChecked():
+                self.btn_uart_settings.setChecked(False)
+            g = self.btn_max_line.geometry()
+            self.gui_max_rows.move(g.x() + 1, g.y() + g.height() + 4)
+            self.gui_max_rows.show()
+        else:
+            self.gui_max_rows.hide()
 
     def switch_uart_settings(self, v):
         if v:
-            x = self.btn_uart_settings.x()
-            y = self.btn_uart_settings.y()
-            h = self.btn_uart_switch.height()
-            self.win_settings.move(x + 1, y + h + 4)
-            self.win_settings.show()
+            if self.btn_max_line.isChecked():
+                self.btn_max_line.setChecked(False)
+            g = self.btn_uart_settings.geometry()
+            self.uart_settings.move(g.x() + 1, g.y() + g.height() + 4)
+            self.uart_settings.show()
         else:
-            self.win_settings.hide()
+            self.uart_settings.hide()
 
     def switch_uart(self):
+        self.switch_off_all()
         if self.uart is None:
             if self.btn_uart_settings.isChecked():
                 self.btn_uart_settings.setChecked(False)
             self.btn_uart_switch.setEnabled(False)
             self.btn_uart_settings.setEnabled(False)
-            p, b, db, pb, sb = self.win_settings.get_settings()
+            p, b, db, pb, sb = self.uart_settings.get_settings()
             self.uart = serial_tool_ex.SerialToolEx(self.signal, p.lower(), p, b, db, pb, sb)
             self.uart.start()
         else:

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'ui_uart_settings_window.ui'
+## Form generated from reading UI file 'ui_uart_settings.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.3.1
 ##
