@@ -14,7 +14,7 @@ from PySide6.QtWidgets import QMainWindow, QMessageBox
 from PySide6.QtCore import QTimer
 
 
-class MainWindow(ui_mainwindow.Ui_MainWindow):
+class MainWindow(ui_mainwindow.Ui_Trailing):
 
     def __init__(self):
         super(MainWindow, self).__init__()
@@ -24,6 +24,7 @@ class MainWindow(ui_mainwindow.Ui_MainWindow):
         self.tgt_vb_pos = None
         self.win_root = QMainWindow()
         self.setupUi(self.win_root)
+        self.win_root.setWindowTitle('Trailing')
         self.win_root.resize(800, 600)
         self.win_settings = py_uart_settings_window.UartSettingsWindow(self)
         self.win_settings.setupUi(self.win_root)

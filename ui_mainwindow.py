@@ -18,12 +18,15 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
 from PySide6.QtWidgets import (QApplication, QGridLayout, QMainWindow, QPushButton,
     QSizePolicy, QSpacerItem, QTextEdit, QWidget)
 
-class Ui_MainWindow(object):
-    def setupUi(self, MainWindow):
-        if not MainWindow.objectName():
-            MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(615, 484)
-        self.centralwidget = QWidget(MainWindow)
+class Ui_Trailing(object):
+    def setupUi(self, Trailing):
+        if not Trailing.objectName():
+            Trailing.setObjectName(u"Trailing")
+        Trailing.resize(615, 484)
+        icon = QIcon()
+        icon.addFile(u"resources/trailing.jpg", QSize(), QIcon.Normal, QIcon.Off)
+        Trailing.setWindowIcon(icon)
+        self.centralwidget = QWidget(Trailing)
         self.centralwidget.setObjectName(u"centralwidget")
         sizePolicy = QSizePolicy(QSizePolicy.Maximum, QSizePolicy.Maximum)
         sizePolicy.setHorizontalStretch(0)
@@ -45,9 +48,9 @@ class Ui_MainWindow(object):
         self.btn_uart_switch.setMaximumSize(QSize(24, 24))
         self.btn_uart_switch.setBaseSize(QSize(24, 24))
         self.btn_uart_switch.setStyleSheet(u"padding: 2px;")
-        icon = QIcon()
-        icon.addFile(u"resources/start.svg", QSize(), QIcon.Normal, QIcon.Off)
-        self.btn_uart_switch.setIcon(icon)
+        icon1 = QIcon()
+        icon1.addFile(u"resources/start.svg", QSize(), QIcon.Normal, QIcon.Off)
+        self.btn_uart_switch.setIcon(icon1)
         self.btn_uart_switch.setIconSize(QSize(18, 18))
         self.btn_uart_switch.setFlat(True)
 
@@ -59,9 +62,9 @@ class Ui_MainWindow(object):
         self.btn_font.setSizePolicy(sizePolicy1)
         self.btn_font.setMinimumSize(QSize(24, 24))
         self.btn_font.setMaximumSize(QSize(24, 24))
-        icon1 = QIcon()
-        icon1.addFile(u"resources/font.svg", QSize(), QIcon.Normal, QIcon.Off)
-        self.btn_font.setIcon(icon1)
+        icon2 = QIcon()
+        icon2.addFile(u"resources/font.svg", QSize(), QIcon.Normal, QIcon.Off)
+        self.btn_font.setIcon(icon2)
         self.btn_font.setIconSize(QSize(18, 18))
         self.btn_font.setCheckable(True)
         self.btn_font.setFlat(True)
@@ -74,9 +77,9 @@ class Ui_MainWindow(object):
         self.btn_max_line.setSizePolicy(sizePolicy1)
         self.btn_max_line.setMinimumSize(QSize(24, 24))
         self.btn_max_line.setMaximumSize(QSize(24, 24))
-        icon2 = QIcon()
-        icon2.addFile(u"resources/max_line.svg", QSize(), QIcon.Normal, QIcon.Off)
-        self.btn_max_line.setIcon(icon2)
+        icon3 = QIcon()
+        icon3.addFile(u"resources/max_line.svg", QSize(), QIcon.Normal, QIcon.Off)
+        self.btn_max_line.setIcon(icon3)
         self.btn_max_line.setIconSize(QSize(18, 18))
         self.btn_max_line.setCheckable(True)
         self.btn_max_line.setFlat(True)
@@ -112,9 +115,9 @@ class Ui_MainWindow(object):
         self.btn_screen_down.setSizePolicy(sizePolicy1)
         self.btn_screen_down.setMinimumSize(QSize(24, 24))
         self.btn_screen_down.setMaximumSize(QSize(24, 24))
-        icon3 = QIcon()
-        icon3.addFile(u"resources/down.svg", QSize(), QIcon.Normal, QIcon.Off)
-        self.btn_screen_down.setIcon(icon3)
+        icon4 = QIcon()
+        icon4.addFile(u"resources/down.svg", QSize(), QIcon.Normal, QIcon.Off)
+        self.btn_screen_down.setIcon(icon4)
         self.btn_screen_down.setIconSize(QSize(18, 18))
         self.btn_screen_down.setCheckable(True)
         self.btn_screen_down.setChecked(True)
@@ -145,31 +148,31 @@ class Ui_MainWindow(object):
         self.btn_uart_clear.setSizePolicy(sizePolicy1)
         self.btn_uart_clear.setMinimumSize(QSize(24, 24))
         self.btn_uart_clear.setMaximumSize(QSize(24, 24))
-        icon4 = QIcon()
-        icon4.addFile(u"resources/clear.svg", QSize(), QIcon.Normal, QIcon.Off)
-        self.btn_uart_clear.setIcon(icon4)
+        icon5 = QIcon()
+        icon5.addFile(u"resources/clear.svg", QSize(), QIcon.Normal, QIcon.Off)
+        self.btn_uart_clear.setIcon(icon5)
         self.btn_uart_clear.setIconSize(QSize(18, 18))
         self.btn_uart_clear.setFlat(True)
 
         self.gridLayout.addWidget(self.btn_uart_clear, 0, 3, 1, 1)
 
-        MainWindow.setCentralWidget(self.centralwidget)
+        Trailing.setCentralWidget(self.centralwidget)
 
-        self.retranslateUi(MainWindow)
+        self.retranslateUi(Trailing)
 
-        QMetaObject.connectSlotsByName(MainWindow)
+        QMetaObject.connectSlotsByName(Trailing)
     # setupUi
 
-    def retranslateUi(self, MainWindow):
-        MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
+    def retranslateUi(self, Trailing):
+        Trailing.setWindowTitle(QCoreApplication.translate("Trailing", u"MainWindow", None))
         self.btn_uart_switch.setText("")
         self.btn_font.setText("")
         self.btn_max_line.setText("")
-        self.btn_uart_settings.setText(QCoreApplication.translate("MainWindow", u"COM3\n"
+        self.btn_uart_settings.setText(QCoreApplication.translate("Trailing", u"COM3\n"
 "115200 8N1", None))
         self.btn_screen_down.setText("")
         self.textEdit.setMarkdown("")
-        self.textEdit.setHtml(QCoreApplication.translate("MainWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+        self.textEdit.setHtml(QCoreApplication.translate("Trailing", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "hr { height: 1px; border-width: 0; }\n"
