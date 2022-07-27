@@ -5,6 +5,7 @@
 # @Email   : jonas.pan@signify.com
 # @File    : py_mainwindow.py
 # ---------------------
+import common
 import gui_agent
 import py_uart_settings
 import py_gui_max_rows
@@ -65,9 +66,6 @@ class MainWindow(ui_mainwindow.Ui_Trailing):
     def get_max_lines(self):
         return self.textEdit.document().maximumBlockCount()
 
-    def clear_uart_log(self):
-        self.textEdit.clear()
-
     # windows signal handle functions
     def textedit_vb_value_changed(self, p):
         self.tgt_vb_pos = p
@@ -78,37 +76,14 @@ class MainWindow(ui_mainwindow.Ui_Trailing):
             QTimer.singleShot(0, lambda: self.textEdit.verticalScrollBar().setValue(self.tgt_vb_pos))
         self.last_vb_max = m
 
-    def switch_off_all(self):
-        if self.btn_uart_settings.isChecked():
-            self.btn_uart_settings.setChecked(False)
-        if self.btn_max_line.isChecked():
-            self.btn_max_line.setChecked(False)
+    def form_click(self):
+        self.btn_uart_settings.setChecked(False)
+        self.btn_max_line.setChecked(False)
+        self.btn_font.setChecked(False)
 
-    def switch_screen_auto_scroll(self, v):
-        if v:
-            self.textEdit.moveCursor(QTextCursor.End)
-            self.textEdit.verticalScrollBar().rangeChanged.disconnect(self.textedit_vb_range_changed)
-            self.textEdit.verticalScrollBar().valueChanged.disconnect(self.textedit_vb_value_changed)
-        else:
-            self.last_vb_max = self.textEdit.verticalScrollBar().maximum()
-            self.tgt_vb_pos = self.textEdit.verticalScrollBar().value()
-            self.textEdit.verticalScrollBar().rangeChanged.connect(self.textedit_vb_range_changed)
-            self.textEdit.verticalScrollBar().valueChanged.connect(self.textedit_vb_value_changed)
-
-    def switch_max_line(self, v):
-        if v:
-            if self.btn_uart_settings.isChecked():
-                self.btn_uart_settings.setChecked(False)
-            g = self.btn_max_line.geometry()
-            self.gui_max_rows.move(g.x() + 1, g.y() + g.height() + 4)
-            self.gui_max_rows.show()
-        else:
-            self.gui_max_rows.hide()
-
+    # toolbar buttons
     def switch_uart_settings(self, v):
         if v:
-            if self.btn_max_line.isChecked():
-                self.btn_max_line.setChecked(False)
             g = self.btn_uart_settings.geometry()
             self.uart_settings.move(g.x() + 1, g.y() + g.height() + 4)
             self.uart_settings.show()
@@ -116,7 +91,6 @@ class MainWindow(ui_mainwindow.Ui_Trailing):
             self.uart_settings.hide()
 
     def switch_uart(self):
-        self.switch_off_all()
         if self.uart is None:
             if self.btn_uart_settings.isChecked():
                 self.btn_uart_settings.setChecked(False)
@@ -129,6 +103,28 @@ class MainWindow(ui_mainwindow.Ui_Trailing):
             self.btn_uart_switch.setEnabled(False)
             self.uart.stop()
 
+    def switch_screen_auto_scroll(self, v):
+        if v:
+            self.textEdit.moveCursor(QTextCursor.End)
+            self.textEdit.verticalScrollBar().rangeChanged.disconnect(self.textedit_vb_range_changed)
+            self.textEdit.verticalScrollBar().valueChanged.disconnect(self.textedit_vb_value_changed)
+        else:
+            self.last_vb_max = self.textEdit.verticalScrollBar().maximum()
+            self.tgt_vb_pos = self.textEdit.verticalScrollBar().value()
+            self.textEdit.verticalScrollBar().rangeChanged.connect(self.textedit_vb_range_changed)
+            self.textEdit.verticalScrollBar().valueChanged.connect(self.textedit_vb_value_changed)
+
+    def clear_uart_log(self):
+        self.textEdit.clear()
+
+    def switch_max_line(self, v):
+        if v:
+            g = self.btn_max_line.geometry()
+            self.gui_max_rows.move(g.x() + 1, g.y() + g.height() + 4)
+            self.gui_max_rows.show()
+        else:
+            self.gui_max_rows.hide()
+
     # thread signal handle functions
     def _gui_agent(self, method, args):
         m = getattr(self, method)
@@ -136,8 +132,13 @@ class MainWindow(ui_mainwindow.Ui_Trailing):
 
     def append_log(self, dt, dirs, text):
         old_pos = self.textEdit.verticalScrollBar().value()
-        tmp = dt.strftime('%Y-%m-%d %H:%M:%S.%f')
-        tmp = '%s %s %s' % (tmp, dirs.value, text)
+        t0 = dt.strftime('%Y-%m-%d %H:%M:%S.%f')
+        t0 = '<font size="1" color="firebrick">%s</font>' % t0
+        if dirs == common.UartDirection.FromUart:
+            t1 = '<font size="2" color="green">%s</font>' % dirs.value
+        else:
+            t1 = '<font size="2" color="pink">%s</font>' % dirs.value
+        tmp = '%s %s %s' % (t0, t1, text)
         self.textEdit.append(tmp)
         if self.btn_screen_down.isChecked():
             self.textEdit.moveCursor(QTextCursor.End)

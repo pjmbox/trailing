@@ -8,7 +8,6 @@
 import ui_gui_max_rows
 from PySide6.QtWidgets import QGroupBox
 from PySide6.QtGui import QIntValidator
-from PySide6.QtCore import Qt
 
 
 class GuiMaxRowsWindow(ui_gui_max_rows.Ui_gui_settings_max_rows):
