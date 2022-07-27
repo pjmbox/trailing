@@ -11,6 +11,7 @@ import py_uart_settings
 import py_gui_max_rows
 import serial_tool_ex
 import ui_mainwindow
+import highlighter
 from PySide6.QtGui import QImage, QPixmap, QIcon, QTextCursor
 from PySide6.QtWidgets import QMainWindow, QMessageBox
 from PySide6.QtCore import QTimer
@@ -24,6 +25,7 @@ class MainWindow(ui_mainwindow.Ui_Trailing):
         self.signal = None
         self.last_vb_max = None
         self.tgt_vb_pos = None
+        self.highlighter = None
         self.win_root = QMainWindow()
         self.setupUi(self.win_root)
         self.win_root.setWindowTitle('Trailing')
@@ -51,6 +53,8 @@ class MainWindow(ui_mainwindow.Ui_Trailing):
         self.signal = gui_agent.GuiAgent()
         self.signal.connect_gui(self._gui_agent)
         self.textEdit.document().setMaximumBlockCount(500)
+        self.highlighter = highlighter.UartHighLighter()
+        self.highlighter.setup_gui(self.textEdit.document())
 
     # misc gui functions
     def show(self):
@@ -133,7 +137,7 @@ class MainWindow(ui_mainwindow.Ui_Trailing):
     def append_log(self, dt, dirs, text):
         old_pos = self.textEdit.verticalScrollBar().value()
         t0 = dt.strftime('%Y-%m-%d %H:%M:%S.%f')
-        t0 = '<font size="1" color="firebrick">%s</font>' % t0
+        t0 = '<font size="2" color="maroon">%s</font>' % t0
         if dirs == common.UartDirection.FromUart:
             t1 = '<font size="2" color="green">%s</font>' % dirs.value
         else:
