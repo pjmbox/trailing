@@ -146,6 +146,7 @@ class MainWindow(ui_mainwindow.Ui_Trailing):
         self.textEdit.append(tmp)
         if self.btn_screen_down.isChecked():
             self.textEdit.moveCursor(QTextCursor.End)
+            self.textEdit.moveCursor(QTextCursor.StartOfLine)
         else:
             self.textEdit.verticalScrollBar().setValue(old_pos)
 
