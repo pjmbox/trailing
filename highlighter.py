@@ -26,7 +26,7 @@ class UartHighLighter(QSyntaxHighlighter):
                 start, end = match.span()
                 self.setFormat(start, end - start, fmt)
 
-    def setup_gui(self, doc):
+    def set_document(self, doc):
         for item in self.config['highlight']:
             fmt = QTextCharFormat()
             fmt.setFontWeight(QFont.Weight.__dict__[item['weight']])

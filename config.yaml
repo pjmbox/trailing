@@ -1,0 +1,14 @@
+config:
+  auto_scroll: false
+  max_rows: 100000
+  rect:
+    height: 485
+    width: 962
+    x: 147
+    y: 124
+  uart:
+    baud: 600
+    data: 8
+    name: ''
+    parity: N
+    stop: 1.0

@@ -11,22 +11,19 @@ from PySide6.QtWidgets import QGroupBox
 from PySide6.QtCore import QTimer
 
 
-class UartSettingsWindow(ui_uart_settings.Ui_UartSettingsWindow):
+class UartSettingsWindow(QGroupBox, ui_uart_settings.Ui_UartSettingsWindow):
 
-    def __init__(self, p_main):
+    def __init__(self, parent):
         super(UartSettingsWindow, self).__init__()
-        self.p_main = p_main
-        self.win_root = None
-        self.com_list = None
+        self.parent = parent
         self.timer = QTimer()
-        self.timer.timeout.connect(self.update_com_list)
+        self.com_list = None
 
-    def setupUi(self, parent_root):
-        self.win_root = QGroupBox()
-        self.win_root.setParent(parent_root)
-        self.win_root.setAutoFillBackground(True)
-        self.win_root.hide()
-        super(UartSettingsWindow, self).setupUi(self.win_root)
+    def setupUi(self, p_wnd):
+        super(UartSettingsWindow, self).setupUi(self)
+        self.setParent(p_wnd)
+        self.setAutoFillBackground(True)
+        self.hide()
         self.com_list = self.get_port_list()
         self.comboBox_uart_name.addItems(self.com_list)
         self.comboBox_uart_name.setCurrentText('')
@@ -41,54 +38,21 @@ class UartSettingsWindow(ui_uart_settings.Ui_UartSettingsWindow):
         self.comboBox_uart_databit.setCurrentText('8')
         self.comboBox_uart_oddbit.addItems(['N', 'E', 'O', 'M', 'S'])
         self.comboBox_uart_oddbit.setCurrentText('N')
-        self.comboBox_uart_name.currentIndexChanged.connect(self.update_settings)
-        self.comboBox_uart_baud.currentIndexChanged.connect(self.update_settings)
-        self.comboBox_uart_databit.currentIndexChanged.connect(self.update_settings)
-        self.comboBox_uart_oddbit.currentIndexChanged.connect(self.update_settings)
-        self.comboBox_uart_stopbit.currentIndexChanged.connect(self.update_settings)
-        self.update_settings()
+        self.comboBox_uart_name.currentIndexChanged.connect(self.slot_update_settings)
+        self.comboBox_uart_baud.currentIndexChanged.connect(self.slot_update_settings)
+        self.comboBox_uart_databit.currentIndexChanged.connect(self.slot_update_settings)
+        self.comboBox_uart_oddbit.currentIndexChanged.connect(self.slot_update_settings)
+        self.comboBox_uart_stopbit.currentIndexChanged.connect(self.slot_update_settings)
+        self.timer.timeout.connect(self.slot_update_com_list)
+        self.slot_update_settings()
 
+    # util functions
     @staticmethod
     def get_port_list():
         tmp = ['']
         for port in list(serial.tools.list_ports.comports()):
             tmp.append(port.device)
         return tmp
-
-    # gui functions
-    def show(self):
-        self.win_root.show()
-        self.timer.start(1000)
-
-    def hide(self):
-        self.win_root.hide()
-        self.timer.stop()
-
-    def move(self, x, y):
-        self.win_root.move(x, y)
-
-    def update_com_list(self):
-        tmp = self.get_port_list()
-        if tmp != self.com_list:
-            text = self.comboBox_uart_name.currentText()
-            self.comboBox_uart_name.clear()
-            self.comboBox_uart_name.addItems(tmp)
-            self.comboBox_uart_name.setCurrentText('' if text not in tmp else text)
-            self.com_list = tmp
-
-    def update_settings(self):
-        name = self.comboBox_uart_name.currentText()
-        baud = self.comboBox_uart_baud.currentText()
-        dbit = self.comboBox_uart_databit.currentText()
-        obit = self.comboBox_uart_oddbit.currentText()
-        sbit = self.comboBox_uart_stopbit.currentText()
-        if name is None or name == '' or name == 'none':
-            name = 'none'
-            self.p_main.btn_uart_switch.setEnabled(False)
-        else:
-            self.p_main.btn_uart_switch.setEnabled(True)
-        tmp = '%s\n%s%s%s %s' % (name, dbit, obit, sbit, baud)
-        self.p_main.btn_uart_settings.setText(tmp)
 
     def get_settings(self):
         name = self.comboBox_uart_name.currentText()
@@ -97,3 +61,43 @@ class UartSettingsWindow(ui_uart_settings.Ui_UartSettingsWindow):
         obit = self.comboBox_uart_oddbit.currentText()
         sbit = self.comboBox_uart_stopbit.currentText()
         return name, int(baud), int(dbit), obit, float(sbit)
+
+    def set_settings(self, name, baud, data, parity, stop):
+        self.comboBox_uart_name.setCurrentText(name)
+        self.comboBox_uart_baud.setCurrentText(str(baud))
+        self.comboBox_uart_databit.setCurrentText(str(data))
+        self.comboBox_uart_oddbit.setCurrentText(parity)
+        self.comboBox_uart_stopbit.setCurrentText(str(stop))
+
+    # gui functions
+    def show(self):
+        self.timer.start(1000)
+        super(UartSettingsWindow, self).show()
+
+    def hide(self):
+        self.timer.stop()
+        super(UartSettingsWindow, self).hide()
+
+    # slot functions
+    def slot_update_com_list(self):
+        tmp = self.get_port_list()
+        if tmp != self.com_list:
+            text = self.comboBox_uart_name.currentText()
+            self.comboBox_uart_name.clear()
+            self.comboBox_uart_name.addItems(tmp)
+            self.comboBox_uart_name.setCurrentText('' if text not in tmp else text)
+            self.com_list = tmp
+
+    def slot_update_settings(self):
+        name = self.comboBox_uart_name.currentText()
+        baud = self.comboBox_uart_baud.currentText()
+        dbit = self.comboBox_uart_databit.currentText()
+        obit = self.comboBox_uart_oddbit.currentText()
+        sbit = self.comboBox_uart_stopbit.currentText()
+        if name is None or name == '' or name == 'none':
+            name = 'none'
+            self.parent.btn_uart_switch.setEnabled(False)
+        else:
+            self.parent.btn_uart_switch.setEnabled(True)
+        tmp = '%s\n%s%s%s %s' % (name, dbit, obit, sbit, baud)
+        self.parent.btn_uart_settings.setText(tmp)
