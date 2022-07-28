@@ -11,7 +11,7 @@ from PySide6.QtWidgets import QGroupBox
 from PySide6.QtCore import QTimer
 
 
-class UartSettingsWindow(QGroupBox, ui_uart_settings.Ui_UartSettingsWindow):
+class UartSettingsWindow(QGroupBox, ui_uart_settings.Ui_UartSettings):
 
     def __init__(self, parent):
         super(UartSettingsWindow, self).__init__()

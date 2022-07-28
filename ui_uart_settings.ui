@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>UartSettingsWindow</class>
- <widget class="QWidget" name="UartSettingsWindow">
+ <class>UartSettings</class>
+ <widget class="QWidget" name="UartSettings">
   <property name="enabled">
    <bool>true</bool>
   </property>

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'ui_mainwindow.ui'
+## Form generated from reading UI file 'ui_main_window.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.3.1
 ##
@@ -19,15 +19,15 @@ from PySide6.QtWidgets import (QApplication, QFrame, QGridLayout, QMainWindow,
     QPushButton, QSizePolicy, QSpacerItem, QTextEdit,
     QWidget)
 
-class Ui_Trailing(object):
-    def setupUi(self, Trailing):
-        if not Trailing.objectName():
-            Trailing.setObjectName(u"Trailing")
-        Trailing.resize(615, 484)
+class Ui_MainWindow(object):
+    def setupUi(self, MainWindow):
+        if not MainWindow.objectName():
+            MainWindow.setObjectName(u"MainWindow")
+        MainWindow.resize(615, 484)
         icon = QIcon()
         icon.addFile(u"resources/trailing.jpg", QSize(), QIcon.Normal, QIcon.Off)
-        Trailing.setWindowIcon(icon)
-        self.centralwidget = QWidget(Trailing)
+        MainWindow.setWindowIcon(icon)
+        self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         sizePolicy = QSizePolicy(QSizePolicy.Maximum, QSizePolicy.Maximum)
         sizePolicy.setHorizontalStretch(0)
@@ -171,22 +171,22 @@ class Ui_Trailing(object):
 
         self.gridLayout.addWidget(self.line_2, 0, 5, 1, 1)
 
-        Trailing.setCentralWidget(self.centralwidget)
+        MainWindow.setCentralWidget(self.centralwidget)
 
-        self.retranslateUi(Trailing)
+        self.retranslateUi(MainWindow)
 
-        QMetaObject.connectSlotsByName(Trailing)
+        QMetaObject.connectSlotsByName(MainWindow)
     # setupUi
 
-    def retranslateUi(self, Trailing):
-        Trailing.setWindowTitle(QCoreApplication.translate("Trailing", u"MainWindow", None))
+    def retranslateUi(self, MainWindow):
+        MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
         self.btn_font.setText("")
         self.btn_max_line.setText("")
-        self.btn_uart_settings.setText(QCoreApplication.translate("Trailing", u"COM3\n"
+        self.btn_uart_settings.setText(QCoreApplication.translate("MainWindow", u"COM3\n"
 "115200 8N1", None))
         self.btn_uart_switch.setText("")
         self.textEdit.setMarkdown("")
-        self.textEdit.setHtml(QCoreApplication.translate("Trailing", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+        self.textEdit.setHtml(QCoreApplication.translate("MainWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "hr { height: 1px; border-width: 0; }\n"

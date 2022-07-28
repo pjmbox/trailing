@@ -10,7 +10,7 @@ import signal_agent
 import gui_uart_settings
 import gui_max_rows
 import serial_tool
-import ui_mainwindow
+import ui_main_window
 import config
 import re
 import yaml
@@ -29,6 +29,34 @@ class UartHighLighter(QSyntaxHighlighter):
         self._mappings = {}
         with open(self.config_filename) as f:
             self.config = yaml.safe_load(f)
+        for item in self.config['highlight']['text']:
+            fmt = QTextCharFormat()
+            fmt.setFontWeight(QFont.Weight.__dict__[item['weight']])
+            fmt.setForeground(Qt.GlobalColor.__dict__[item['color']])
+            self._mappings[item['pattern']] = fmt
+        s, c = self.get_timestamp()
+        self.timestamp_format = '<font size="%d" color="%s">%%s</font>' % (s, c)
+        s, c = self.get_from_uart()
+        self.from_uart_format = '<font size="%d" color="%s">%%s</font>' % (s, c)
+        s, c = self.get_to_uart()
+        self.to_uart_format = '<font size="%d" color="%s">%%s</font>' % (s, c)
+        self.datetime_format = self.get_datetime_fmt_str()
+
+    def get_datetime_fmt_str(self):
+        tmp = self.config['highlight']['timestamp']
+        return tmp['datetime_fmt_str']
+
+    def get_timestamp(self):
+        tmp = self.config['highlight']['timestamp']
+        return tmp['size'], tmp['color']
+
+    def get_to_uart(self):
+        tmp = self.config['highlight']['to_uart']
+        return tmp['size'], tmp['color']
+
+    def get_from_uart(self):
+        tmp = self.config['highlight']['from_uart']
+        return tmp['size'], tmp['color']
 
     def highlightBlock(self, text):
         for pattern, fmt in self._mappings.items():
@@ -37,15 +65,10 @@ class UartHighLighter(QSyntaxHighlighter):
                 self.setFormat(start, end - start, fmt)
 
     def set_document(self, doc):
-        for item in self.config['highlight']:
-            fmt = QTextCharFormat()
-            fmt.setFontWeight(QFont.Weight.__dict__[item['weight']])
-            fmt.setForeground(Qt.GlobalColor.__dict__[item['color']])
-            self._mappings[item['pattern']] = fmt
         self.setDocument(doc)
 
 
-class MainWindow(QMainWindow, ui_mainwindow.Ui_Trailing):
+class MainWindow(QMainWindow, ui_main_window.Ui_MainWindow):
 
     def __init__(self):
         super(MainWindow, self).__init__()
@@ -173,12 +196,12 @@ class MainWindow(QMainWindow, ui_mainwindow.Ui_Trailing):
 
     def append_log(self, dt, dirs, text):
         old_pos = self.textEdit.verticalScrollBar().value()
-        t0 = dt.strftime('%Y-%m-%d %H:%M:%S.%f')
-        t0 = '<font size="2" color="maroon">%s</font>' % t0
+        t0 = dt.strftime(self.highlighter.datetime_format)
+        t0 = self.highlighter.timestamp_format % t0
         if dirs == common.UartDirection.FromUart:
-            t1 = '<font size="2" color="green">%s</font>' % dirs.value
+            t1 = self.highlighter.from_uart_format % dirs.value
         else:
-            t1 = '<font size="2" color="pink">%s</font>' % dirs.value
+            t1 = self.highlighter.to_uart_format % dirs.value
         tmp = '%s %s %s' % (t0, t1, text)
         self.textEdit.append(tmp)
         if self.btn_screen_down.isChecked():

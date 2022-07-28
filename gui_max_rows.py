@@ -5,12 +5,12 @@
 # @Email   : jonas.pan@signify.com
 # @File    : py_gui_max_rows
 # ---------------------
-import ui_gui_max_rows
+import ui_max_rows
 from PySide6.QtWidgets import QGroupBox
 from PySide6.QtGui import QIntValidator, QFocusEvent
 
 
-class GuiMaxRowsWindow(QGroupBox, ui_gui_max_rows.Ui_gui_settings_max_rows):
+class GuiMaxRowsWindow(QGroupBox, ui_max_rows.Ui_MaxRows):
 
     def __init__(self, parent):
         super(GuiMaxRowsWindow, self).__init__()

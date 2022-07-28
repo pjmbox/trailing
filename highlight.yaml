@@ -1,4 +1,15 @@
 highlight:
+  timestamp:
+    datetime_fmt_str: '%Y-%m-%d %H:%M:%S.%f'
+    size: 2
+    color: 'maroon'
+  to_uart:
+    size: 2
+    color: 'pink'
+  from_uart:
+    size: 2
+    color: 'green'
+  text:
   - pattern: 'DEBUG'
     weight: 'Bold'
     color: 'darkGreen'

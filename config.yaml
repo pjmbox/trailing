@@ -1,6 +1,6 @@
 config:
   auto_scroll: true
-  max_rows: 100000
+  max_rows: 2000
   rect:
     height: 667
     width: 1280

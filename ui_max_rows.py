@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'ui_gui_max_rows.ui'
+## Form generated from reading UI file 'ui_max_rows.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.3.1
 ##
@@ -18,28 +18,28 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
 from PySide6.QtWidgets import (QApplication, QFormLayout, QLabel, QLineEdit,
     QSizePolicy, QWidget)
 
-class Ui_gui_settings_max_rows(object):
-    def setupUi(self, gui_settings_max_rows):
-        if not gui_settings_max_rows.objectName():
-            gui_settings_max_rows.setObjectName(u"gui_settings_max_rows")
-        gui_settings_max_rows.resize(111, 22)
+class Ui_MaxRows(object):
+    def setupUi(self, MaxRows):
+        if not MaxRows.objectName():
+            MaxRows.setObjectName(u"MaxRows")
+        MaxRows.resize(111, 22)
         sizePolicy = QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(gui_settings_max_rows.sizePolicy().hasHeightForWidth())
-        gui_settings_max_rows.setSizePolicy(sizePolicy)
-        gui_settings_max_rows.setMinimumSize(QSize(111, 22))
-        gui_settings_max_rows.setMaximumSize(QSize(111, 22))
+        sizePolicy.setHeightForWidth(MaxRows.sizePolicy().hasHeightForWidth())
+        MaxRows.setSizePolicy(sizePolicy)
+        MaxRows.setMinimumSize(QSize(111, 22))
+        MaxRows.setMaximumSize(QSize(111, 22))
         font = QFont()
         font.setFamilies([u"Verdana"])
         font.setPointSize(6)
-        gui_settings_max_rows.setFont(font)
-        self.formLayout = QFormLayout(gui_settings_max_rows)
+        MaxRows.setFont(font)
+        self.formLayout = QFormLayout(MaxRows)
         self.formLayout.setObjectName(u"formLayout")
         self.formLayout.setHorizontalSpacing(1)
         self.formLayout.setVerticalSpacing(1)
         self.formLayout.setContentsMargins(1, 1, 1, 1)
-        self.label = QLabel(gui_settings_max_rows)
+        self.label = QLabel(MaxRows)
         self.label.setObjectName(u"label")
         sizePolicy.setHeightForWidth(self.label.sizePolicy().hasHeightForWidth())
         self.label.setSizePolicy(sizePolicy)
@@ -50,7 +50,7 @@ class Ui_gui_settings_max_rows(object):
 
         self.formLayout.setWidget(0, QFormLayout.LabelRole, self.label)
 
-        self.edt_max_rows = QLineEdit(gui_settings_max_rows)
+        self.edt_max_rows = QLineEdit(MaxRows)
         self.edt_max_rows.setObjectName(u"edt_max_rows")
         sizePolicy.setHeightForWidth(self.edt_max_rows.sizePolicy().hasHeightForWidth())
         self.edt_max_rows.setSizePolicy(sizePolicy)
@@ -62,13 +62,13 @@ class Ui_gui_settings_max_rows(object):
         self.formLayout.setWidget(0, QFormLayout.FieldRole, self.edt_max_rows)
 
 
-        self.retranslateUi(gui_settings_max_rows)
+        self.retranslateUi(MaxRows)
 
-        QMetaObject.connectSlotsByName(gui_settings_max_rows)
+        QMetaObject.connectSlotsByName(MaxRows)
     # setupUi
 
-    def retranslateUi(self, gui_settings_max_rows):
-        gui_settings_max_rows.setWindowTitle(QCoreApplication.translate("gui_settings_max_rows", u"Form", None))
-        self.label.setText(QCoreApplication.translate("gui_settings_max_rows", u"Max rows:", None))
+    def retranslateUi(self, MaxRows):
+        MaxRows.setWindowTitle(QCoreApplication.translate("MaxRows", u"Form", None))
+        self.label.setText(QCoreApplication.translate("MaxRows", u"Max rows:", None))
     # retranslateUi
 
