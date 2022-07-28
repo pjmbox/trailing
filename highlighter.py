@@ -6,17 +6,19 @@
 # @File    : highlighter
 # ---------------------
 import re
+import yaml
 from PySide6.QtGui import QSyntaxHighlighter, QTextCharFormat, Qt, QFont
 
 
 class UartHighLighter(QSyntaxHighlighter):
 
+    config_filename = 'highlight.yaml'
+
     def __init__(self, parent=None):
         super(UartHighLighter, self).__init__(parent)
         self._mappings = {}
-
-    def add_mapping(self, pattern, fmt):
-        self._mappings[pattern] = fmt
+        with open(self.config_filename) as f:
+            self.config = yaml.safe_load(f)
 
     def highlightBlock(self, text):
         for pattern, fmt in self._mappings.items():
@@ -24,15 +26,10 @@ class UartHighLighter(QSyntaxHighlighter):
                 start, end = match.span()
                 self.setFormat(start, end - start, fmt)
 
-    def _add_fmt(self, pattern, color):
-        fmt = QTextCharFormat()
-        fmt.setFontWeight(QFont.Bold)
-        fmt.setForeground(color)
-        self.add_mapping(pattern, fmt)
-
     def setup_gui(self, doc):
-        self._add_fmt('DEBUG', Qt.darkGreen)
-        self._add_fmt('INFO', Qt.darkBlue)
-        self._add_fmt('WARNING', Qt.darkYellow)
-        self._add_fmt('ERROR', Qt.red)
+        for item in self.config['highlight']:
+            fmt = QTextCharFormat()
+            fmt.setFontWeight(QFont.Weight.__dict__[item['weight']])
+            fmt.setForeground(Qt.GlobalColor.__dict__[item['color']])
+            self._mappings[item['pattern']] = fmt
         self.setDocument(doc)

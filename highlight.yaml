@@ -1,0 +1,14 @@
+highlight:
+  - pattern: 'DEBUG'
+    weight: 'Bold'
+    color: 'darkGreen'
+  - pattern: 'INFO'
+    weight: 'Bold'
+    color: 'darkBlue'
+  - pattern: 'WARNING'
+    weight: 'Bold'
+    color: 'darkYellow'
+  - pattern: 'ERROR'
+    weight: 'Bold'
+    color: 'red'
+
