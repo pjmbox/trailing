@@ -63,7 +63,8 @@ class UartSettingsWindow(QGroupBox, ui_uart_settings.Ui_UartSettingsWindow):
         return name, int(baud), int(dbit), obit, float(sbit)
 
     def set_settings(self, name, baud, data, parity, stop):
-        self.comboBox_uart_name.setCurrentText(name)
+        if name in self.com_list:
+            self.comboBox_uart_name.setCurrentText(name)
         self.comboBox_uart_baud.setCurrentText(str(baud))
         self.comboBox_uart_databit.setCurrentText(str(data))
         self.comboBox_uart_oddbit.setCurrentText(parity)
