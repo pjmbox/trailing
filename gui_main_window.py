@@ -3,19 +3,46 @@
 # @Time    : 7/18/2022 2:56 PM
 # @Author  : jonas pan
 # @Email   : jonas.pan@signify.com
-# @File    : py_mainwindow.py
+# @File    : gui_main_window.py
 # ---------------------
 import common
-import gui_agent
-import py_uart_settings
-import py_gui_max_rows
-import serial_tool_ex
+import signal_agent
+import gui_uart_settings
+import gui_max_rows
+import serial_tool
 import ui_mainwindow
-import highlighter
 import config
-from PySide6.QtGui import QImage, QPixmap, QIcon, QTextCursor, QMouseEvent, QCloseEvent
+import re
+import yaml
+from PySide6.QtGui import QImage, QPixmap, QIcon, QTextCursor, QMouseEvent, QCloseEvent, QSyntaxHighlighter, \
+    QTextCharFormat, Qt, QFont
 from PySide6.QtWidgets import QMainWindow, QMessageBox
 from PySide6.QtCore import QTimer
+
+
+class UartHighLighter(QSyntaxHighlighter):
+
+    config_filename = 'highlight.yaml'
+
+    def __init__(self, parent=None):
+        super(UartHighLighter, self).__init__(parent)
+        self._mappings = {}
+        with open(self.config_filename) as f:
+            self.config = yaml.safe_load(f)
+
+    def highlightBlock(self, text):
+        for pattern, fmt in self._mappings.items():
+            for match in re.finditer(pattern, text):
+                start, end = match.span()
+                self.setFormat(start, end - start, fmt)
+
+    def set_document(self, doc):
+        for item in self.config['highlight']:
+            fmt = QTextCharFormat()
+            fmt.setFontWeight(QFont.Weight.__dict__[item['weight']])
+            fmt.setForeground(Qt.GlobalColor.__dict__[item['color']])
+            self._mappings[item['pattern']] = fmt
+        self.setDocument(doc)
 
 
 class MainWindow(QMainWindow, ui_mainwindow.Ui_Trailing):
@@ -26,10 +53,10 @@ class MainWindow(QMainWindow, ui_mainwindow.Ui_Trailing):
         self.last_vb_max = None
         self.tgt_vb_pos = None
         self.config = config.Config()
-        self.signal = gui_agent.GuiAgent()
-        self.highlighter = highlighter.UartHighLighter()
-        self.uart_settings = py_uart_settings.UartSettingsWindow(self)
-        self.gui_max_rows = py_gui_max_rows.GuiMaxRowsWindow(self)
+        self.signal = signal_agent.GuiAgent()
+        self.highlighter = UartHighLighter()
+        self.uart_settings = gui_uart_settings.UartSettingsWindow(self)
+        self.gui_max_rows = gui_max_rows.GuiMaxRowsWindow(self)
         self.setupUi(self)
 
     def setupUi(self, p_wnd):
@@ -111,7 +138,7 @@ class MainWindow(QMainWindow, ui_mainwindow.Ui_Trailing):
             self.btn_uart_switch.setEnabled(False)
             self.btn_uart_settings.setEnabled(False)
             p, b, db, pb, sb = self.uart_settings.get_settings()
-            self.uart = serial_tool_ex.SerialToolEx(self.signal, p.lower(), p, b, db, pb, sb)
+            self.uart = serial_tool.SerialToolEx(self.signal, p.lower(), p, b, db, pb, sb)
             self.uart.start()
         else:
             self.btn_uart_switch.setEnabled(False)

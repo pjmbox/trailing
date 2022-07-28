@@ -9,7 +9,7 @@ import logging
 import coloredlogs
 import os
 import sys
-import py_mainwindow
+import gui_main_window
 from PySide6.QtWidgets import QApplication
 
 
@@ -35,7 +35,7 @@ class Main:
     def run(cls):
         cls.setup_logging()
         app = QApplication(sys.argv)
-        tmp = py_mainwindow.MainWindow()
+        tmp = gui_main_window.MainWindow()
         tmp.show()
         try:
             sys.exit(app.exec())
@@ -45,4 +45,3 @@ class Main:
 
 if __name__ == '__main__':
     Main.run()
-
