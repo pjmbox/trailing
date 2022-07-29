@@ -84,8 +84,9 @@ class SerialTool:
         err_count = self.err_count_max
         while not self._terminated:
             try:
+                tmp = super(io.IOBase, self._uart_client).readline()
                 ctx = self.get_received_line_context()
-                ctx.line_raw = super(io.IOBase, self._uart_client).readline()
+                ctx.line_raw = tmp
                 ctx.time_raw = datetime.datetime.now()
                 self.last_read_time = ctx.time_raw
                 for handler in self.line_handlers:
@@ -140,11 +141,12 @@ class SerialTool:
 
 class SerialToolEx(SerialTool):
 
-    def __init__(self, signal, name, port, baud, databit, paritybit, stopbit):
+    def __init__(self, signal, name, port, baud, databit, paritybit, stopbit, hex_input):
         super(SerialToolEx, self).__init__(signal, name, port, baud, databit, paritybit, stopbit)
         self.encoding = 'ascii'
         self.error_policy = 'ignore'
         self.serial_log_filename = 'log' + os.sep + '%s_%s.log' % (name, datetime.datetime.now().strftime('%Y%m%d'))
+        self.hex_input = hex_input
         self.serial_log_fd = None
         self.parsers = []
 
@@ -201,10 +203,9 @@ class SerialToolEx(SerialTool):
         self.serial_logging(ctx)
         self.gui_logging(ctx)
 
-    @staticmethod
-    def get_received_line_context():
+    def get_received_line_context(self):
         tmp = common.DownstreamLineContext()
-        tmp.is_hex = False
+        tmp.is_hex = self.hex_input
         return tmp
 
     def init_receive_handlers(self):

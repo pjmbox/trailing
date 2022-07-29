@@ -8,6 +8,7 @@
 import yaml
 from PySide6.QtCore import QRect
 
+
 class Config:
 
     config_filename = 'config.yaml'
@@ -23,13 +24,13 @@ class Config:
         with open(self.config_filename, 'w') as f:
             yaml.safe_dump(self.config, f)
 
-    def save_auto_scroll(self, v):
+    def set_auto_scroll(self, v):
         self._get_root()['auto_scroll'] = v
 
-    def save_max_rows(self, v):
+    def set_max_rows(self, v):
         self._get_root()['max_rows'] = v
 
-    def save_uart_settings(self, name, baud, data, parity, stop):
+    def set_uart_settings(self, name, baud, data, parity, stop):
         tmp = self._get_root()['uart']
         tmp['name'] = name
         tmp['baud'] = baud
@@ -37,7 +38,7 @@ class Config:
         tmp['parity'] = parity
         tmp['stop'] = stop
 
-    def save_rect(self, rect):
+    def set_rect(self, rect):
         tmp = self._get_root()['rect']
         tmp['x'] = rect.x()
         tmp['y'] = rect.y()
@@ -62,5 +63,3 @@ class Config:
         rect.setWidth(tmp['width'])
         rect.setHeight(tmp['height'])
         return rect
-
-

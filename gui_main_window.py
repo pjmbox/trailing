@@ -77,7 +77,7 @@ class MainWindow(QMainWindow, ui_main_window.Ui_MainWindow):
         self.tgt_vb_pos = None
         self.config = config.Config()
         self.signal = signal_agent.GuiAgent()
-        self.highlighter = UartHighLighter()
+        self.highlighter = UartHighLighter(self)
         self.uart_settings = gui_uart_settings.UartSettingsWindow(self)
         self.gui_max_rows = gui_max_rows.GuiMaxRowsWindow(self)
         self.setupUi(self)
@@ -102,11 +102,12 @@ class MainWindow(QMainWindow, ui_main_window.Ui_MainWindow):
             self.textEdit.verticalScrollBar().rangeChanged.connect(self.textedit_vb_range_changed)
             self.textEdit.verticalScrollBar().valueChanged.connect(self.textedit_vb_value_changed)
 
-        self.btn_uart_switch.clicked.connect(self.switch_uart)
         self.btn_uart_settings.toggled.connect(self.switch_uart_settings)
+        self.btn_uart_switch.clicked.connect(self.switch_uart)
         self.btn_screen_down.toggled.connect(self.switch_screen_auto_scroll)
-        self.btn_max_line.toggled.connect(self.switch_max_line)
         self.btn_uart_clear.clicked.connect(self.click_clear_uart_log)
+        self.btn_hex.toggled.connect(self.switch_hex_input)
+        self.btn_max_line.toggled.connect(self.switch_max_line)
 
     # misc gui functions
     @staticmethod
@@ -126,10 +127,10 @@ class MainWindow(QMainWindow, ui_main_window.Ui_MainWindow):
         self.btn_font.setChecked(False)
 
     def closeEvent(self, event: QCloseEvent) -> None:
-        self.config.save_rect(self.geometry())
-        self.config.save_max_rows(self.get_max_lines())
-        self.config.save_auto_scroll(self.btn_screen_down.isChecked())
-        self.config.save_uart_settings(*self.uart_settings.get_settings())
+        self.config.set_rect(self.geometry())
+        self.config.set_max_rows(self.get_max_lines())
+        self.config.set_auto_scroll(self.btn_screen_down.isChecked())
+        self.config.set_uart_settings(*self.uart_settings.get_settings())
         self.config.save()
         if self.uart is not None:
             self.uart.stop()
@@ -161,7 +162,8 @@ class MainWindow(QMainWindow, ui_main_window.Ui_MainWindow):
             self.btn_uart_switch.setEnabled(False)
             self.btn_uart_settings.setEnabled(False)
             p, b, db, pb, sb = self.uart_settings.get_settings()
-            self.uart = serial_tool.SerialToolEx(self.signal, p.lower(), p, b, db, pb, sb)
+            h = self.btn_hex.isChecked()
+            self.uart = serial_tool.SerialToolEx(self.signal, p.lower(), p, b, db, pb, sb, h)
             self.uart.start()
         else:
             self.btn_uart_switch.setEnabled(False)
@@ -180,6 +182,10 @@ class MainWindow(QMainWindow, ui_main_window.Ui_MainWindow):
 
     def click_clear_uart_log(self):
         self.textEdit.clear()
+
+    def switch_hex_input(self, v):
+        if self.uart is not None:
+            self.uart.hex_input = v
 
     def switch_max_line(self, v):
         if v:
