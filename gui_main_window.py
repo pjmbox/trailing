@@ -95,6 +95,7 @@ class MainWindow(QMainWindow, ui_main_window.Ui_MainWindow):
         self.textEdit.document().setMaximumBlockCount(self.config.get_max_rows())
         self.uart_settings.set_settings(*self.config.get_uart_settings())
         self.btn_screen_down.setChecked(self.config.get_auto_scroll())
+        self.btn_hex.setChecked(self.config.get_hex())
 
         if not self.btn_screen_down.isChecked():
             self.last_vb_max = self.textEdit.verticalScrollBar().maximum()
@@ -131,6 +132,7 @@ class MainWindow(QMainWindow, ui_main_window.Ui_MainWindow):
         self.config.set_max_rows(self.get_max_lines())
         self.config.set_auto_scroll(self.btn_screen_down.isChecked())
         self.config.set_uart_settings(*self.uart_settings.get_settings())
+        self.config.set_hex(self.btn_hex.isChecked())
         self.config.save()
         if self.uart is not None:
             self.uart.stop()

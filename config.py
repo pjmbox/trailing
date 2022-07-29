@@ -45,6 +45,10 @@ class Config:
         tmp['width'] = rect.width()
         tmp['height'] = rect.height()
 
+    def set_hex(self, received):
+        tmp = self._get_root()['hex']
+        tmp['received'] = received
+
     def get_auto_scroll(self):
         return self._get_root()['auto_scroll']
 
@@ -63,3 +67,7 @@ class Config:
         rect.setWidth(tmp['width'])
         rect.setHeight(tmp['height'])
         return rect
+
+    def get_hex(self):
+        tmp = self._get_root()['hex']
+        return tmp['received']
