@@ -5,6 +5,8 @@
 # @Email   : jonas.pan@signify.com
 # @File    : gui_main_window.py
 # ---------------------
+import logging
+
 import common
 import signal_agent
 import gui_uart_settings
@@ -29,33 +31,39 @@ class UartHighLighter(QSyntaxHighlighter):
         self._mappings = {}
         with open(self.config_filename) as f:
             self.config = yaml.safe_load(f)
-        for item in self.config['highlight']['text']:
+        for item in self.config['highlight']['rcv_text']:
             fmt = QTextCharFormat()
             fmt.setFontWeight(QFont.Weight.__dict__[item['weight']])
             fmt.setForeground(Qt.GlobalColor.__dict__[item['color']])
             self._mappings[item['pattern']] = fmt
-        s, c = self.get_timestamp()
+        dt, s, c = self.get_timestamp()
+        self.datetime_format = dt
         self.timestamp_format = '<font size="%d" color="%s">%%s</font>' % (s, c)
-        s, c = self.get_from_uart()
-        self.from_uart_format = '<font size="%d" color="%s">%%s</font>' % (s, c)
-        s, c = self.get_to_uart()
-        self.to_uart_format = '<font size="%d" color="%s">%%s</font>' % (s, c)
-        self.datetime_format = self.get_datetime_fmt_str()
+        s, c = self.get_from_arrow()
+        self.arrow_from_format = '<font size="%d" color="%s">%%s</font>' % (s, c)
+        s, c = self.get_to_arrow()
+        self.arrow_to_format = '<font size="%d" color="%s">%%s</font>' % (s, c)
+        _, c = self.get_snd_text()
+        self.snd_text_format = '<span style="font-color=%s; font-weight=bolder;">%%s</span>' % c
 
-    def get_datetime_fmt_str(self):
-        tmp = self.config['highlight']['timestamp']
-        return tmp['datetime_fmt_str']
+    @staticmethod
+    def escape_text(text):
+        return text.replace('<', '&lt;')
 
     def get_timestamp(self):
         tmp = self.config['highlight']['timestamp']
+        return tmp['datetime_fmt_str'], tmp['size'], tmp['color']
+
+    def get_to_arrow(self):
+        tmp = self.config['highlight']['arrow']['to_uart']
         return tmp['size'], tmp['color']
 
-    def get_to_uart(self):
-        tmp = self.config['highlight']['to_uart']
+    def get_from_arrow(self):
+        tmp = self.config['highlight']['arrow']['from_uart']
         return tmp['size'], tmp['color']
 
-    def get_from_uart(self):
-        tmp = self.config['highlight']['from_uart']
+    def get_snd_text(self):
+        tmp = self.config['highlight']['snd_text']
         return tmp['size'], tmp['color']
 
     def highlightBlock(self, text):
@@ -66,6 +74,23 @@ class UartHighLighter(QSyntaxHighlighter):
 
     def set_document(self, doc):
         self.setDocument(doc)
+
+    def format_timestamp(self, dt):
+        t0 = dt.strftime(self.datetime_format)
+        return self.timestamp_format % t0
+
+    def format_arrow(self, arrow):
+        if arrow == common.UartDirection.FromUart:
+            return self.arrow_from_format % self.escape_text(arrow.value)
+        if arrow == common.UartDirection.ToUart:
+            return self.arrow_to_format % self.escape_text(arrow.value)
+        return ''
+
+    def format_text(self, text, arrow):
+        if arrow == common.UartDirection.ToUart:
+            return self.snd_text_format % self.escape_text(text)
+        else:
+            return text
 
 
 class MainWindow(QMainWindow, ui_main_window.Ui_MainWindow):
@@ -87,28 +112,32 @@ class MainWindow(QMainWindow, ui_main_window.Ui_MainWindow):
 
         self.uart_settings.setupUi(self)
         self.gui_max_rows.setupUi(self)
-        self.highlighter.set_document(self.textEdit.document())
+        self.highlighter.set_document(self.edt_received.document())
         self.signal.connect_gui(self._gui_agent)
 
         self.setWindowTitle('Trailing')
         self.setGeometry(self.config.get_rect())
-        self.textEdit.document().setMaximumBlockCount(self.config.get_max_rows())
+        self.edt_received.document().setMaximumBlockCount(self.config.get_max_rows())
         self.uart_settings.set_settings(*self.config.get_uart_settings())
-        self.btn_screen_down.setChecked(self.config.get_auto_scroll())
-        self.btn_hex.setChecked(self.config.get_hex())
+        self.btn_scroll_down.setChecked(self.config.get_auto_scroll())
+        r, s = self.config.get_hex()
+        self.btn_hex_received.setChecked(r)
+        self.btn_hex_sent.setChecked(s)
 
-        if not self.btn_screen_down.isChecked():
-            self.last_vb_max = self.textEdit.verticalScrollBar().maximum()
-            self.tgt_vb_pos = self.textEdit.verticalScrollBar().value()
-            self.textEdit.verticalScrollBar().rangeChanged.connect(self.textedit_vb_range_changed)
-            self.textEdit.verticalScrollBar().valueChanged.connect(self.textedit_vb_value_changed)
+        if not self.btn_scroll_down.isChecked():
+            self.last_vb_max = self.edt_received.verticalScrollBar().maximum()
+            self.tgt_vb_pos = self.edt_received.verticalScrollBar().value()
+            self.edt_received.verticalScrollBar().rangeChanged.connect(self.textedit_vb_range_changed)
+            self.edt_received.verticalScrollBar().valueChanged.connect(self.textedit_vb_value_changed)
 
         self.btn_uart_settings.toggled.connect(self.switch_uart_settings)
         self.btn_uart_switch.clicked.connect(self.switch_uart)
-        self.btn_screen_down.toggled.connect(self.switch_screen_auto_scroll)
-        self.btn_uart_clear.clicked.connect(self.click_clear_uart_log)
-        self.btn_hex.toggled.connect(self.switch_hex_input)
-        self.btn_max_line.toggled.connect(self.switch_max_line)
+        self.btn_scroll_down.toggled.connect(self.switch_screen_auto_scroll)
+        self.btn_clear.clicked.connect(self.click_clear_uart_log)
+        self.btn_hex_received.toggled.connect(self.switch_hex_input)
+        self.btn_hex_sent.toggled.connect(self.switch_hex_output)
+        self.btn_max_rows.toggled.connect(self.switch_max_line)
+        self.edt_sent.returnPressed.connect(self.send_to_uart)
 
     # misc gui functions
     @staticmethod
@@ -116,23 +145,23 @@ class MainWindow(QMainWindow, ui_main_window.Ui_MainWindow):
         wgt.setIcon(QIcon(QPixmap(QImage(fn))))
 
     def set_max_lines(self, n):
-        self.textEdit.document().setMaximumBlockCount(n)
+        self.edt_received.document().setMaximumBlockCount(n)
 
     def get_max_lines(self):
-        return self.textEdit.document().maximumBlockCount()
+        return self.edt_received.document().maximumBlockCount()
 
     # windows signal handle functions
     def mouseReleaseEvent(self, event: QMouseEvent) -> None:
         self.btn_uart_settings.setChecked(False)
-        self.btn_max_line.setChecked(False)
+        self.btn_max_rows.setChecked(False)
         self.btn_font.setChecked(False)
 
     def closeEvent(self, event: QCloseEvent) -> None:
         self.config.set_rect(self.geometry())
         self.config.set_max_rows(self.get_max_lines())
-        self.config.set_auto_scroll(self.btn_screen_down.isChecked())
+        self.config.set_auto_scroll(self.btn_scroll_down.isChecked())
         self.config.set_uart_settings(*self.uart_settings.get_settings())
-        self.config.set_hex(self.btn_hex.isChecked())
+        self.config.set_hex(self.btn_hex_received.isChecked(), self.btn_hex_sent.isChecked())
         self.config.save()
         if self.uart is not None:
             self.uart.stop()
@@ -145,10 +174,21 @@ class MainWindow(QMainWindow, ui_main_window.Ui_MainWindow):
     def textedit_vb_range_changed(self, _, m):
         if m < self.last_vb_max:
             self.tgt_vb_pos = max(self.tgt_vb_pos - (self.last_vb_max - m), 0)
-            QTimer.singleShot(0, lambda: self.textEdit.verticalScrollBar().setValue(self.tgt_vb_pos))
+            QTimer.singleShot(0, lambda: self.edt_received.verticalScrollBar().setValue(self.tgt_vb_pos))
         self.last_vb_max = m
 
     # toolbar button slot function
+    def send_to_uart(self):
+        if self.uart is not None:
+            tmp = self.edt_sent.text()
+            if not self.uart.hex_output:
+                tmp += '\n'
+            try:
+                self.uart.send(tmp)
+            except Exception as e:
+                logging.error(e)
+                self.show_alert('Error', str(e))
+
     def switch_uart_settings(self, v):
         if v:
             g = self.btn_uart_settings.geometry()
@@ -164,8 +204,9 @@ class MainWindow(QMainWindow, ui_main_window.Ui_MainWindow):
             self.btn_uart_switch.setEnabled(False)
             self.btn_uart_settings.setEnabled(False)
             p, b, db, pb, sb = self.uart_settings.get_settings()
-            h = self.btn_hex.isChecked()
-            self.uart = serial_tool.SerialToolEx(self.signal, p.lower(), p, b, db, pb, sb, h)
+            hr = self.btn_hex_received.isChecked()
+            hs = self.btn_hex_sent.isChecked()
+            self.uart = serial_tool.SerialToolEx(self.signal, p.lower(), p, b, db, pb, sb, hr, hs)
             self.uart.start()
         else:
             self.btn_uart_switch.setEnabled(False)
@@ -173,25 +214,29 @@ class MainWindow(QMainWindow, ui_main_window.Ui_MainWindow):
 
     def switch_screen_auto_scroll(self, v):
         if v:
-            self.textEdit.moveCursor(QTextCursor.End)
-            self.textEdit.verticalScrollBar().rangeChanged.disconnect(self.textedit_vb_range_changed)
-            self.textEdit.verticalScrollBar().valueChanged.disconnect(self.textedit_vb_value_changed)
+            self.edt_received.moveCursor(QTextCursor.End)
+            self.edt_received.verticalScrollBar().rangeChanged.disconnect(self.textedit_vb_range_changed)
+            self.edt_received.verticalScrollBar().valueChanged.disconnect(self.textedit_vb_value_changed)
         else:
-            self.last_vb_max = self.textEdit.verticalScrollBar().maximum()
-            self.tgt_vb_pos = self.textEdit.verticalScrollBar().value()
-            self.textEdit.verticalScrollBar().rangeChanged.connect(self.textedit_vb_range_changed)
-            self.textEdit.verticalScrollBar().valueChanged.connect(self.textedit_vb_value_changed)
+            self.last_vb_max = self.edt_received.verticalScrollBar().maximum()
+            self.tgt_vb_pos = self.edt_received.verticalScrollBar().value()
+            self.edt_received.verticalScrollBar().rangeChanged.connect(self.textedit_vb_range_changed)
+            self.edt_received.verticalScrollBar().valueChanged.connect(self.textedit_vb_value_changed)
 
     def click_clear_uart_log(self):
-        self.textEdit.clear()
+        self.edt_received.clear()
 
     def switch_hex_input(self, v):
         if self.uart is not None:
             self.uart.hex_input = v
 
+    def switch_hex_output(self, v):
+        if self.uart is not None:
+            self.uart.hex_output = v
+
     def switch_max_line(self, v):
         if v:
-            g = self.btn_max_line.geometry()
+            g = self.btn_max_rows.geometry()
             self.gui_max_rows.move(g.x() + 1, g.y() + g.height() + 4)
             self.gui_max_rows.show()
         else:
@@ -202,31 +247,29 @@ class MainWindow(QMainWindow, ui_main_window.Ui_MainWindow):
         m = getattr(self, method)
         m(*args)
 
-    def append_log(self, dt, dirs, text):
-        old_pos = self.textEdit.verticalScrollBar().value()
-        t0 = dt.strftime(self.highlighter.datetime_format)
-        t0 = self.highlighter.timestamp_format % t0
-        if dirs == common.UartDirection.FromUart:
-            t1 = self.highlighter.from_uart_format % dirs.value
+    def append_log(self, dt, arrow, text):
+        old_pos = self.edt_received.verticalScrollBar().value()
+        t0 = self.highlighter.format_timestamp(dt)
+        t1 = self.highlighter.format_arrow(arrow)
+        t2 = self.highlighter.format_text(text, arrow)
+        self.edt_received.append('%s %s %s' % (t0, t1, t2))
+        if self.btn_scroll_down.isChecked():
+            self.edt_received.moveCursor(QTextCursor.End)
+            self.edt_received.moveCursor(QTextCursor.StartOfLine)
         else:
-            t1 = self.highlighter.to_uart_format % dirs.value
-        tmp = '%s %s %s' % (t0, t1, text)
-        self.textEdit.append(tmp)
-        if self.btn_screen_down.isChecked():
-            self.textEdit.moveCursor(QTextCursor.End)
-            self.textEdit.moveCursor(QTextCursor.StartOfLine)
-        else:
-            self.textEdit.verticalScrollBar().setValue(old_pos)
+            self.edt_received.verticalScrollBar().setValue(old_pos)
 
     def uart_is_running(self):
         self.set_icon(self.btn_uart_switch, 'resources/stop')
         self.btn_uart_switch.setEnabled(True)
+        self.edt_sent.setEnabled(True)
 
     def uart_is_stopped(self):
         self.uart = None
         self.set_icon(self.btn_uart_switch, 'resources/start')
         self.btn_uart_switch.setEnabled(True)
         self.btn_uart_settings.setEnabled(True)
+        self.edt_sent.setEnabled(False)
 
     @staticmethod
     def show_alert(title, text):

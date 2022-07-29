@@ -1,7 +1,8 @@
 config:
   auto_scroll: true
   hex:
-    received: true
+    received: false
+    sent: false
   max_rows: 2000
   rect:
     height: 667

@@ -141,12 +141,13 @@ class SerialTool:
 
 class SerialToolEx(SerialTool):
 
-    def __init__(self, signal, name, port, baud, databit, paritybit, stopbit, hex_input):
+    def __init__(self, signal, name, port, baud, databit, paritybit, stopbit, hex_input, hex_output):
         super(SerialToolEx, self).__init__(signal, name, port, baud, databit, paritybit, stopbit)
         self.encoding = 'ascii'
         self.error_policy = 'ignore'
         self.serial_log_filename = 'log' + os.sep + '%s_%s.log' % (name, datetime.datetime.now().strftime('%Y%m%d'))
         self.hex_input = hex_input
+        self.hex_output = hex_output
         self.serial_log_fd = None
         self.parsers = []
 
@@ -194,10 +195,10 @@ class SerialToolEx(SerialTool):
         for parser in self.parsers:
             parser(ctx)
 
-    def send(self, text, is_hex=False):
+    def send(self, text):
         ctx = common.UpstreamLineContext()
         ctx.line_text = text
-        ctx.is_hex = is_hex
+        ctx.is_hex = self.hex_output
         self.convert_to_io(ctx)
         super(SerialToolEx, self).send(ctx)
         self.serial_logging(ctx)
