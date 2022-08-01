@@ -1,9 +1,12 @@
 config:
-  auto_scroll: true
-  hex:
-    received: false
-    sent: false
-  max_rows: 2000
+  rcv_text:
+    hex: false
+    max_rows: 2000
+    auto_scroll: true
+  snd_text:
+    hex: false
+    carrier_return: false
+    line_feed: false
   rect:
     height: 667
     width: 1280

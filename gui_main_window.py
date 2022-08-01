@@ -116,13 +116,23 @@ class MainWindow(QMainWindow, ui_main_window.Ui_MainWindow):
         self.signal.connect_gui(self._gui_agent)
 
         self.setWindowTitle('Trailing')
+
         self.setGeometry(self.config.get_rect())
-        self.edt_received.document().setMaximumBlockCount(self.config.get_max_rows())
         self.uart_settings.set_settings(*self.config.get_uart_settings())
-        self.btn_scroll_down.setChecked(self.config.get_auto_scroll())
-        r, s = self.config.get_hex()
-        self.btn_hex_received.setChecked(r)
-        self.btn_hex_sent.setChecked(s)
+
+        h, a, m = self.config.get_rcv_text()
+        self.btn_hex_received.setChecked(h)
+        self.btn_scroll_down.setChecked(a)
+        self.edt_received.document().setMaximumBlockCount(m)
+
+        h, c, l = self.config.get_snd_text()
+        self.btn_hex_sent.setChecked(h)
+        self.btn_carrier_return.setChecked(c)
+        self.btn_line_feed.setChecked(l)
+
+        if self.btn_hex_sent.isChecked():
+            self.btn_carrier_return.setEnabled(False)
+            self.btn_line_feed.setEnabled(False)
 
         if not self.btn_scroll_down.isChecked():
             self.last_vb_max = self.edt_received.verticalScrollBar().maximum()
@@ -157,11 +167,10 @@ class MainWindow(QMainWindow, ui_main_window.Ui_MainWindow):
         self.btn_font.setChecked(False)
 
     def closeEvent(self, event: QCloseEvent) -> None:
-        self.config.set_rect(self.geometry())
-        self.config.set_max_rows(self.get_max_lines())
-        self.config.set_auto_scroll(self.btn_scroll_down.isChecked())
         self.config.set_uart_settings(*self.uart_settings.get_settings())
-        self.config.set_hex(self.btn_hex_received.isChecked(), self.btn_hex_sent.isChecked())
+        self.config.set_rect(self.geometry())
+        self.config.set_rcv_text(self.btn_hex_received.isChecked(), self.btn_scroll_down.isChecked(), self.get_max_lines())
+        self.config.set_snd_text(self.btn_hex_sent.isChecked(), self.btn_carrier_return.isChecked(), self.btn_line_feed.isChecked())
         self.config.save()
         if self.uart is not None:
             self.uart.stop()
@@ -182,7 +191,10 @@ class MainWindow(QMainWindow, ui_main_window.Ui_MainWindow):
         if self.uart is not None:
             tmp = self.edt_sent.text()
             if not self.uart.hex_output:
-                tmp += '\n'
+                if self.btn_carrier_return.isChecked():
+                    tmp += '\r'
+                if self.btn_line_feed.isChecked():
+                    tmp += '\n'
             try:
                 self.uart.send(tmp)
             except Exception as e:
@@ -233,6 +245,8 @@ class MainWindow(QMainWindow, ui_main_window.Ui_MainWindow):
     def switch_hex_output(self, v):
         if self.uart is not None:
             self.uart.hex_output = v
+        self.btn_carrier_return.setEnabled(not v)
+        self.btn_line_feed.setEnabled(not v)
 
     def switch_max_line(self, v):
         if v:
@@ -263,6 +277,10 @@ class MainWindow(QMainWindow, ui_main_window.Ui_MainWindow):
         self.set_icon(self.btn_uart_switch, 'resources/stop')
         self.btn_uart_switch.setEnabled(True)
         self.edt_sent.setEnabled(True)
+        self.btn_hex_sent.setEnabled(True)
+        if not self.btn_hex_sent.isChecked():
+            self.btn_carrier_return.setEnabled(True)
+            self.btn_line_feed.setEnabled(True)
 
     def uart_is_stopped(self):
         self.uart = None
@@ -270,6 +288,9 @@ class MainWindow(QMainWindow, ui_main_window.Ui_MainWindow):
         self.btn_uart_switch.setEnabled(True)
         self.btn_uart_settings.setEnabled(True)
         self.edt_sent.setEnabled(False)
+        self.btn_hex_sent.setEnabled(False)
+        self.btn_carrier_return.setEnabled(False)
+        self.btn_line_feed.setEnabled(False)
 
     @staticmethod
     def show_alert(title, text):

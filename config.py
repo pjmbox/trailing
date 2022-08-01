@@ -24,12 +24,6 @@ class Config:
         with open(self.config_filename, 'w') as f:
             yaml.safe_dump(self.config, f)
 
-    def set_auto_scroll(self, v):
-        self._get_root()['auto_scroll'] = v
-
-    def set_max_rows(self, v):
-        self._get_root()['max_rows'] = v
-
     def set_uart_settings(self, name, baud, data, parity, stop):
         tmp = self._get_root()['uart']
         tmp['name'] = name
@@ -45,16 +39,17 @@ class Config:
         tmp['width'] = rect.width()
         tmp['height'] = rect.height()
 
-    def set_hex(self, received, sent):
-        tmp = self._get_root()['hex']
-        tmp['received'] = received
-        tmp['sent'] = sent
+    def set_rcv_text(self, hexify, auto_scroll, max_rows):
+        tmp = self._get_root()['rcv_text']
+        tmp['hex'] = hexify
+        tmp['auto_scroll'] = auto_scroll
+        tmp['max_rows'] = max_rows
 
-    def get_auto_scroll(self):
-        return self._get_root()['auto_scroll']
-
-    def get_max_rows(self):
-        return self._get_root()['max_rows']
+    def set_snd_text(self, hexify, cr, lf):
+        tmp = self._get_root()['snd_text']
+        tmp['hex'] = hexify
+        tmp['carrier_return'] = cr
+        tmp['line_feed'] =lf
 
     def get_uart_settings(self):
         tmp = self._get_root()['uart']
@@ -69,6 +64,10 @@ class Config:
         rect.setHeight(tmp['height'])
         return rect
 
-    def get_hex(self):
-        tmp = self._get_root()['hex']
-        return tmp['received'], tmp['sent']
+    def get_rcv_text(self):
+        tmp = self._get_root()['rcv_text']
+        return tmp['hex'], tmp['auto_scroll'], tmp['max_rows']
+
+    def get_snd_text(self):
+        tmp = self._get_root()['snd_text']
+        return tmp['hex'], tmp['carrier_return'], tmp['line_feed']
