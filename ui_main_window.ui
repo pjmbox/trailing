@@ -490,8 +490,8 @@
          </property>
          <property name="font">
           <font>
-           <family>Tahoma</family>
-           <pointsize>7</pointsize>
+           <family>Courier New</family>
+           <pointsize>9</pointsize>
           </font>
          </property>
          <property name="maxLength">
@@ -619,6 +619,50 @@
          <property name="icon">
           <iconset>
            <normaloff>resources/hex.png</normaloff>resources/hex.png</iconset>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>18</width>
+           <height>18</height>
+          </size>
+         </property>
+         <property name="checkable">
+          <bool>true</bool>
+         </property>
+         <property name="flat">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="btn_aliases">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>24</width>
+           <height>24</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>24</width>
+           <height>24</height>
+          </size>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset>
+           <normaloff>resources/at.svg</normaloff>resources/at.svg</iconset>
          </property>
          <property name="iconSize">
           <size>

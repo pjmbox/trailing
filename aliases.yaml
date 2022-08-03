@@ -1,0 +1,66 @@
+config:
+  text:
+    - id: 1
+      cmd: '[AUTO,ON]'
+      desc: ''
+    - id: 18
+      cmd: '[AUTO,OFF]'
+      desc: ''
+    - id: 3
+      cmd: '[AUTO,WIPE]'
+      desc: ''
+    - id: 15
+      cmd: '[AUTO,NET_OFF]'
+      desc: ''
+    - id: 16
+      cmd: '[AUTO,NET_ON]'
+      desc: ''
+    - id: 12
+      cmd: '[AUTO,WIPE_CLR]'
+      desc: ''
+    - id: 13
+      cmd: '[AUTO,OTA_CLR]'
+      desc: ''
+    - id: 2
+      cmd: '[AUTO,REBOOT]'
+      desc: ''
+    - id: 18
+      cmd: '[AUTO,CHANGEIP,]'
+      desc: ''
+    - id: 11
+      cmd: '[AUTO,RANDOM_ATTACH,]'
+      desc: ''
+    - id: 4
+      cmd: '[AUTO,SYNC]'
+      desc: ''
+    - id: 5
+      cmd: '[AUTO,CLIENT_ID]'
+      desc: ''
+    - id: 6
+      cmd: '[AUTO,DIM]'
+      desc: ''
+    - id: 7
+      cmd: '[AUTO,SUNRISE]'
+      desc: ''
+    - id: 8
+      cmd: '[AUTO,SUNSET]'
+      desc: ''
+    - id: 9
+      cmd: '[AUTO,DEBUG_LEVEL,]'
+      desc: ''
+    - id: 10
+      cmd: '[AUTO,GPSRTC]'
+      desc: ''
+    - id: 14
+      cmd: '[AUTO,SETTIME,]'
+      desc: ''
+    - id: 16
+      cmd: '[AUTO,DISABLE_CCLK,]'
+      desc: ''
+    - id: 17
+      cmd: '[AUTO,SETGPS_INVALIDTIME,]'
+      desc: ''
+  hex:
+    - id: 1
+      cmd: '000000000000'
+      desc: 'relay address: 254, channel: 0, value: 0'

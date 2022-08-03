@@ -206,8 +206,8 @@ class Ui_MainWindow(object):
         self.edt_sent.setMinimumSize(QSize(0, 22))
         self.edt_sent.setMaximumSize(QSize(400, 22))
         font1 = QFont()
-        font1.setFamilies([u"Tahoma"])
-        font1.setPointSize(7)
+        font1.setFamilies([u"Courier New"])
+        font1.setPointSize(9)
         self.edt_sent.setFont(font1)
         self.edt_sent.setMaxLength(512)
         self.edt_sent.setClearButtonEnabled(True)
@@ -260,6 +260,22 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout.addWidget(self.btn_hex_sent)
 
+        self.btn_aliases = QPushButton(self.groupbox_bottom)
+        self.btn_aliases.setObjectName(u"btn_aliases")
+        self.btn_aliases.setEnabled(False)
+        sizePolicy2.setHeightForWidth(self.btn_aliases.sizePolicy().hasHeightForWidth())
+        self.btn_aliases.setSizePolicy(sizePolicy2)
+        self.btn_aliases.setMinimumSize(QSize(24, 24))
+        self.btn_aliases.setMaximumSize(QSize(24, 24))
+        icon9 = QIcon()
+        icon9.addFile(u"resources/at.svg", QSize(), QIcon.Normal, QIcon.Off)
+        self.btn_aliases.setIcon(icon9)
+        self.btn_aliases.setIconSize(QSize(18, 18))
+        self.btn_aliases.setCheckable(True)
+        self.btn_aliases.setFlat(True)
+
+        self.horizontalLayout.addWidget(self.btn_aliases)
+
         self.horizontalspacer_bottom = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
         self.horizontalLayout.addItem(self.horizontalspacer_bottom)
@@ -306,6 +322,7 @@ class Ui_MainWindow(object):
         self.btn_carrier_return.setText("")
         self.btn_line_feed.setText("")
         self.btn_hex_sent.setText("")
+        self.btn_aliases.setText("")
         self.edt_received.setMarkdown("")
         self.edt_received.setHtml(QCoreApplication.translate("MainWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"

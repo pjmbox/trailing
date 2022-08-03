@@ -24,6 +24,14 @@ class Config:
         with open(self.config_filename, 'w') as f:
             yaml.safe_dump(self.config, f)
 
+    def get_highlight_config_filename(self):
+        tmp = self._get_root()['cfg_files']
+        return tmp['highlight']
+
+    def get_aliases_config_filename(self):
+        tmp = self._get_root()['cfg_files']
+        return tmp['aliases']
+
     def set_uart_settings(self, name, baud, data, parity, stop):
         tmp = self._get_root()['uart']
         tmp['name'] = name

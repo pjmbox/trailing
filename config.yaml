@@ -1,17 +1,20 @@
 config:
+  cfg_files:
+    aliases: aliases.yaml
+    highlight: highlight.yaml
   rcv_text:
-    hex: false
-    max_rows: 2000
     auto_scroll: true
-  snd_text:
     hex: false
-    carrier_return: false
-    line_feed: false
+    max_rows: 20000
   rect:
     height: 667
     width: 1280
     x: 0
     y: 23
+  snd_text:
+    carrier_return: false
+    hex: false
+    line_feed: true
   uart:
     baud: 115200
     data: 8

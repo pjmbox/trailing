@@ -26,11 +26,11 @@ class GuiMaxRowsWindow(QGroupBox, ui_max_rows.Ui_MaxRows):
 
     # gui functions
     def show(self):
-        self.edt_max_rows.setText(str(self.parent.get_max_lines()))
+        self.edt_max_rows.setText(str(self.parent.get_max_rows()))
         self.edt_max_rows.setFocus()
         super(GuiMaxRowsWindow, self).show()
 
     # slot functions
     def slot_return_pressed(self):
-        self.parent.set_max_lines(int(self.edt_max_rows.text()))
-        self.parent.btn_max_line.setChecked(False)
+        self.parent.set_max_rows(int(self.edt_max_rows.text()))
+        self.parent.btn_max_rows.setChecked(False)
