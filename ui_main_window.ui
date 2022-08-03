@@ -99,6 +99,9 @@
            <height>24</height>
           </size>
          </property>
+         <property name="toolTip">
+          <string>Max rows</string>
+         </property>
          <property name="text">
           <string/>
          </property>
@@ -157,6 +160,9 @@
            <family>Verdana</family>
            <pointsize>6</pointsize>
           </font>
+         </property>
+         <property name="toolTip">
+          <string>Uart settings</string>
          </property>
          <property name="styleSheet">
           <string notr="true">text-align: left; vertical-align: middle ;padding: 2px 2px 2px 2px; </string>
@@ -222,6 +228,9 @@
            <height>24</height>
           </size>
          </property>
+         <property name="toolTip">
+          <string>Auto scroll down</string>
+         </property>
          <property name="text">
           <string/>
          </property>
@@ -276,6 +285,9 @@
            <height>24</height>
           </size>
          </property>
+         <property name="toolTip">
+          <string>Show hex string</string>
+         </property>
          <property name="text">
           <string/>
          </property>
@@ -316,6 +328,9 @@
            <width>24</width>
            <height>24</height>
           </size>
+         </property>
+         <property name="toolTip">
+          <string>Clear</string>
          </property>
          <property name="text">
           <string/>
@@ -361,6 +376,9 @@
            <height>24</height>
           </size>
          </property>
+         <property name="toolTip">
+          <string>Open/Close UART</string>
+         </property>
          <property name="styleSheet">
           <string notr="true">padding: 2px;</string>
          </property>
@@ -401,6 +419,9 @@
            <width>24</width>
            <height>24</height>
           </size>
+         </property>
+         <property name="toolTip">
+          <string>Font settings</string>
          </property>
          <property name="text">
           <string/>
@@ -494,6 +515,9 @@
            <pointsize>9</pointsize>
           </font>
          </property>
+         <property name="toolTip">
+          <string>Send text</string>
+         </property>
          <property name="maxLength">
           <number>512</number>
          </property>
@@ -524,6 +548,9 @@
            <width>24</width>
            <height>24</height>
           </size>
+         </property>
+         <property name="toolTip">
+          <string>Auto send CR</string>
          </property>
          <property name="text">
           <string/>
@@ -569,6 +596,9 @@
            <height>24</height>
           </size>
          </property>
+         <property name="toolTip">
+          <string>Auto send LF</string>
+         </property>
          <property name="text">
           <string/>
          </property>
@@ -613,6 +643,9 @@
            <height>24</height>
           </size>
          </property>
+         <property name="toolTip">
+          <string>Send hex string</string>
+         </property>
          <property name="text">
           <string/>
          </property>
@@ -656,6 +689,9 @@
            <width>24</width>
            <height>24</height>
           </size>
+         </property>
+         <property name="toolTip">
+          <string>Send commands</string>
          </property>
          <property name="text">
           <string/>
