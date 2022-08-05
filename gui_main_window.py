@@ -148,6 +148,7 @@ class MainWindow(QMainWindow, ui_main_window.Ui_MainWindow):
         self.btn_clear.clicked.connect(self.click_clear_uart_log)
         self.btn_max_rows.toggled.connect(self.switch_max_rows)
         self.btn_hex_received.toggled.connect(self.switch_hex_input)
+        self.btn_send.clicked.connect(self.send_to_uart)
         self.edt_sent.returnPressed.connect(self.send_to_uart)
         self.btn_hex_sent.toggled.connect(self.switch_hex_output)
         self.btn_aliases.toggled.connect(self.switch_aliases)
@@ -304,6 +305,7 @@ class MainWindow(QMainWindow, ui_main_window.Ui_MainWindow):
         self.btn_uart_switch.setEnabled(True)
         self.edt_sent.setEnabled(True)
         self.btn_hex_sent.setEnabled(True)
+        self.btn_send.setEnabled(True)
         if not self.btn_hex_sent.isChecked():
             self.btn_carrier_return.setEnabled(True)
             self.btn_line_feed.setEnabled(True)
@@ -316,6 +318,7 @@ class MainWindow(QMainWindow, ui_main_window.Ui_MainWindow):
         self.btn_uart_settings.setEnabled(True)
         self.edt_sent.setEnabled(False)
         self.btn_hex_sent.setEnabled(False)
+        self.btn_send.setEnabled(False)
         self.btn_carrier_return.setEnabled(False)
         self.btn_line_feed.setEnabled(False)
         self.btn_aliases.setEnabled(False)

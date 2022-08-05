@@ -12,7 +12,7 @@ config:
     x: 0
     y: 23
   snd_text:
-    carrier_return: false
+    carrier_return: true
     hex: false
     line_feed: true
   uart:
