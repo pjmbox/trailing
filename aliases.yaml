@@ -3,61 +3,61 @@ config:
     - id: 1
       cmd: '[AUTO,ON]'
       desc: ''
-    - id: 18
+    - id: 2
       cmd: '[AUTO,OFF]'
       desc: ''
     - id: 3
       cmd: '[AUTO,WIPE]'
       desc: ''
-    - id: 15
+    - id: 4
       cmd: '[AUTO,NET_OFF]'
       desc: ''
-    - id: 16
+    - id: 5
       cmd: '[AUTO,NET_ON]'
       desc: ''
-    - id: 12
+    - id: 6
       cmd: '[AUTO,WIPE_CLR]'
       desc: ''
-    - id: 13
+    - id: 7
       cmd: '[AUTO,OTA_CLR]'
       desc: ''
-    - id: 2
+    - id: 8
       cmd: '[AUTO,REBOOT]'
       desc: ''
-    - id: 18
+    - id: 9
       cmd: '[AUTO,CHANGEIP,]'
       desc: ''
-    - id: 11
+    - id: 10
       cmd: '[AUTO,RANDOM_ATTACH,]'
       desc: ''
-    - id: 4
+    - id: 11
       cmd: '[AUTO,SYNC]'
       desc: ''
-    - id: 5
+    - id: 12
       cmd: '[AUTO,CLIENT_ID]'
       desc: ''
-    - id: 6
+    - id: 13
       cmd: '[AUTO,DIM]'
       desc: ''
-    - id: 7
+    - id: 14
       cmd: '[AUTO,SUNRISE]'
       desc: ''
-    - id: 8
+    - id: 15
       cmd: '[AUTO,SUNSET]'
       desc: ''
-    - id: 9
+    - id: 16
       cmd: '[AUTO,DEBUG_LEVEL,]'
       desc: ''
-    - id: 10
+    - id: 17
       cmd: '[AUTO,GPSRTC]'
       desc: ''
-    - id: 14
+    - id: 18
       cmd: '[AUTO,SETTIME,]'
       desc: ''
-    - id: 16
+    - id: 19
       cmd: '[AUTO,DISABLE_CCLK,]'
       desc: ''
-    - id: 17
+    - id: 20
       cmd: '[AUTO,SETGPS_INVALIDTIME,]'
       desc: ''
   hex:

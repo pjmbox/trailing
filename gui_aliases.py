@@ -7,7 +7,7 @@
 # ---------------------
 import ui_aliases
 import yaml
-from PySide6.QtWidgets import QGroupBox
+from PySide6.QtWidgets import QGroupBox, QListWidgetItem
 
 
 class GuiAliasesWindow(QGroupBox, ui_aliases.Ui_Aliases):
@@ -17,27 +17,25 @@ class GuiAliasesWindow(QGroupBox, ui_aliases.Ui_Aliases):
         self.parent = parent
         self.text_aliases = []
         self.hex_aliases = []
-        self.text_items = []
-        self.hex_items = []
-        self.text_max_len = 0
-        self.hex_max_len = 0
         self.load_aliases()
 
-    @staticmethod
-    def _init_aliases_items(items, aliases):
+    def _init_aliases_items(self, aliases):
         length = 0
+        self.list_aliases.clear()
         for i in range(len(aliases)):
-            tmp = aliases[i]['cmd']
-            if len(tmp) > length:
-                length = len(tmp)
-            items.append(aliases[i]['cmd'])
-        return length
+            c = aliases[i]['cmd']
+            d = aliases[i]['desc']
+            if len(c) > length:
+                length = len(c)
+            item = QListWidgetItem()
+            item.setText(c)
+            item.setToolTip(d)
+            self.list_aliases.addItem(item)
+        self.set_size(len(aliases), length)
 
     def set_size(self, m, n):
-        m = min(m, 15)
-        n = min(n, 40)
-        self.setFixedHeight(m * 17)
-        self.setFixedWidth(n * 9)
+        self.setFixedHeight(min(m, 15) * 17)
+        self.setFixedWidth(min(n, 40) * 9)
 
     def load_aliases(self):
         with open(self.parent.config.get_aliases_config_filename()) as f:
@@ -45,10 +43,6 @@ class GuiAliasesWindow(QGroupBox, ui_aliases.Ui_Aliases):
             tmp = tmp['config']
             self.text_aliases = tmp['text']
             self.hex_aliases = tmp['hex']
-        self.text_items = []
-        self.text_max_len = self._init_aliases_items(self.text_items, self.text_aliases)
-        self.hex_items = []
-        self.hex_max_len = self._init_aliases_items(self.hex_items, self.hex_aliases)
 
     def setupUi(self, p_wnd):
         super(GuiAliasesWindow, self).setupUi(self)
@@ -59,14 +53,10 @@ class GuiAliasesWindow(QGroupBox, ui_aliases.Ui_Aliases):
         self.list_aliases.itemClicked.connect(self.list_click)
 
     def setup_text_aliases(self):
-        self.list_aliases.clear()
-        self.list_aliases.addItems(self.text_items)
-        self.set_size(len(self.text_items), self.text_max_len)
+        self._init_aliases_items(self.text_aliases)
 
     def setup_hex_aliases(self):
-        self.list_aliases.clear()
-        self.list_aliases.addItems(self.hex_items)
-        self.set_size(len(self.hex_items), self.hex_max_len)
+        self._init_aliases_items(self.hex_aliases)
 
     def list_double_click(self, item):
         self.parent.send(item.data(0))
