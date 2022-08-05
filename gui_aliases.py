@@ -34,6 +34,8 @@ class GuiAliasesWindow(QGroupBox, ui_aliases.Ui_Aliases):
         return length
 
     def set_size(self, m, n):
+        m = min(m, 15)
+        n = min(n, 40)
         self.setFixedHeight(m * 17)
         self.setFixedWidth(n * 9)
 
