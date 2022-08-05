@@ -62,5 +62,8 @@ config:
       desc: ''
   hex:
     - id: 1
-      cmd: '000000000000'
-      desc: 'relay address: 254, channel: 0, value: 0'
+      cmd: 'fe050000ff009835'
+      desc: '[relay] addr: 254, chn: 0, val: 255'
+    - id: 2
+      cmd: 'fe0500000000d9c5'
+      desc: '[relay] addr: 254, chn: 0, val: 0'

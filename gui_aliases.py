@@ -5,8 +5,8 @@
 # @Email   : jonas.pan@signify.com
 # @File    : gui_aliases
 # ---------------------
-import ui_aliases
 import yaml
+import ui_aliases
 from PySide6.QtWidgets import QGroupBox, QListWidgetItem
 
 
@@ -15,32 +15,8 @@ class GuiAliasesWindow(QGroupBox, ui_aliases.Ui_Aliases):
     def __init__(self, parent):
         super(GuiAliasesWindow, self).__init__()
         self.parent = parent
-        self.text_aliases = []
-        self.hex_aliases = []
-        self.load_aliases()
-
-    def _init_aliases_items(self, aliases):
-        length = 0
-        self.list_aliases.clear()
-        for i in range(len(aliases)):
-            c = aliases[i]['cmd']
-            d = aliases[i]['desc']
-            if len(c) > length:
-                length = len(c)
-            item = QListWidgetItem()
-            item.setText(c)
-            item.setToolTip(d)
-            self.list_aliases.addItem(item)
-        self.set_size(len(aliases), length)
-
-    def set_size(self, m, n):
-        self.setFixedHeight(min(m, 15) * 17)
-        self.setFixedWidth(min(n, 40) * 9)
-
-    def load_aliases(self):
         with open(self.parent.config.get_aliases_config_filename()) as f:
-            tmp = yaml.safe_load(f)
-            tmp = tmp['config']
+            tmp = yaml.safe_load(f)['config']
             self.text_aliases = tmp['text']
             self.hex_aliases = tmp['hex']
 
@@ -51,6 +27,23 @@ class GuiAliasesWindow(QGroupBox, ui_aliases.Ui_Aliases):
         self.hide()
         self.list_aliases.itemDoubleClicked.connect(self.list_double_click)
         self.list_aliases.itemClicked.connect(self.list_click)
+
+    def set_size(self, m, n):
+        self.setFixedHeight(min(m, 15) * 17)
+        self.setFixedWidth(min(n, 40) * 9)
+
+    def _init_aliases_items(self, aliases):
+        length = 0
+        self.list_aliases.clear()
+        for i in range(len(aliases)):
+            c = aliases[i]['cmd']
+            d = aliases[i]['desc']
+            length = max(len(c), length)
+            item = QListWidgetItem()
+            item.setText(c)
+            item.setToolTip(d)
+            self.list_aliases.addItem(item)
+        self.set_size(len(aliases), length)
 
     def setup_text_aliases(self):
         self._init_aliases_items(self.text_aliases)

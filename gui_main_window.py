@@ -152,6 +152,7 @@ class MainWindow(QMainWindow, ui_main_window.Ui_MainWindow):
         self.edt_sent.returnPressed.connect(self.send_to_uart)
         self.btn_hex_sent.toggled.connect(self.switch_hex_output)
         self.btn_aliases.toggled.connect(self.switch_aliases)
+        self.groupbox_bottom.clicked.connect(self.un_click_all_bottom_buttons)
 
     # misc gui functions
     @staticmethod
@@ -208,6 +209,9 @@ class MainWindow(QMainWindow, ui_main_window.Ui_MainWindow):
         self.last_vb_max = m
 
     # toolbar button slot function
+    def un_click_all_bottom_buttons(self):
+        self.btn_aliases.setChecked(False)
+
     def send_to_uart(self):
         if self.btn_aliases.isChecked():
             self.btn_aliases.setChecked(False)
