@@ -121,6 +121,7 @@ class MainWindow(QMainWindow, ui_main_window.Ui_MainWindow):
 
         self.setGeometry(self.config.get_rect())
         self.uart_settings.set_settings(*self.config.get_uart_settings())
+        self.uart_settings.start_refresh()
 
         h, a, m = self.config.get_rcv_text()
         self.btn_hex_received.setChecked(h)
@@ -310,6 +311,7 @@ class MainWindow(QMainWindow, ui_main_window.Ui_MainWindow):
         self.edt_sent.setEnabled(True)
         self.btn_hex_sent.setEnabled(True)
         self.btn_send.setEnabled(True)
+        self.uart_settings.stop_refresh()
         if not self.btn_hex_sent.isChecked():
             self.btn_carrier_return.setEnabled(True)
             self.btn_line_feed.setEnabled(True)
@@ -326,6 +328,7 @@ class MainWindow(QMainWindow, ui_main_window.Ui_MainWindow):
         self.btn_carrier_return.setEnabled(False)
         self.btn_line_feed.setEnabled(False)
         self.btn_aliases.setEnabled(False)
+        self.uart_settings.start_refresh()
 
     @staticmethod
     def show_alert(title, text):

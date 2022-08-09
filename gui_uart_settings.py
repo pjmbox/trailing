@@ -70,13 +70,17 @@ class UartSettingsWindow(QGroupBox, ui_uart_settings.Ui_UartSettings):
         self.comboBox_uart_oddbit.setCurrentText(parity)
         self.comboBox_uart_stopbit.setCurrentText(str(stop))
 
+    def start_refresh(self):
+        self.timer.start(1000)
+
+    def stop_refresh(self):
+        self.timer.stop()
+
     # gui functions
     def show(self):
-        self.timer.start(1000)
         super(UartSettingsWindow, self).show()
 
     def hide(self):
-        self.timer.stop()
         super(UartSettingsWindow, self).hide()
 
     # slot functions
