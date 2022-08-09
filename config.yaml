@@ -5,7 +5,7 @@ config:
   rcv_text:
     auto_scroll: true
     hex: false
-    max_rows: 20000
+    max_rows: 10
   rect:
     height: 667
     width: 1280

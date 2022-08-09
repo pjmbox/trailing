@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>111</width>
-    <height>22</height>
+    <height>26</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -19,13 +19,13 @@
   <property name="minimumSize">
    <size>
     <width>111</width>
-    <height>22</height>
+    <height>26</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
     <width>111</width>
-    <height>22</height>
+    <height>26</height>
    </size>
   </property>
   <property name="font">
@@ -37,12 +37,9 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <layout class="QFormLayout" name="formLayout">
-   <property name="horizontalSpacing">
-    <number>1</number>
-   </property>
-   <property name="verticalSpacing">
-    <number>1</number>
+  <layout class="QHBoxLayout" name="horizontalLayout">
+   <property name="spacing">
+    <number>0</number>
    </property>
    <property name="leftMargin">
     <number>1</number>
@@ -56,7 +53,7 @@
    <property name="bottomMargin">
     <number>1</number>
    </property>
-   <item row="0" column="0">
+   <item>
     <widget class="QLabel" name="label">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -90,7 +87,7 @@
      </property>
     </widget>
    </item>
-   <item row="0" column="1">
+   <item>
     <widget class="QLineEdit" name="edt_max_rows">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -100,13 +97,13 @@
      </property>
      <property name="minimumSize">
       <size>
-       <width>60</width>
+       <width>36</width>
        <height>18</height>
       </size>
      </property>
      <property name="maximumSize">
       <size>
-       <width>60</width>
+       <width>36</width>
        <height>18</height>
       </size>
      </property>
@@ -116,8 +113,52 @@
        <pointsize>6</pointsize>
       </font>
      </property>
+     <property name="maxLength">
+      <number>6</number>
+     </property>
      <property name="alignment">
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+     <property name="placeholderText">
+      <string>press return to confirm</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QPushButton" name="btn_ok">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>20</width>
+       <height>20</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>20</width>
+       <height>20</height>
+      </size>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>resources/tick.svg</normaloff>resources/tick.svg</iconset>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>18</width>
+       <height>18</height>
+      </size>
+     </property>
+     <property name="flat">
+      <bool>true</bool>
      </property>
     </widget>
    </item>

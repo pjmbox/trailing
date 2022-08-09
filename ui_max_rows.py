@@ -15,30 +15,29 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QFormLayout, QLabel, QLineEdit,
-    QSizePolicy, QWidget)
+from PySide6.QtWidgets import (QApplication, QHBoxLayout, QLabel, QLineEdit,
+    QPushButton, QSizePolicy, QWidget)
 
 class Ui_MaxRows(object):
     def setupUi(self, MaxRows):
         if not MaxRows.objectName():
             MaxRows.setObjectName(u"MaxRows")
-        MaxRows.resize(111, 22)
+        MaxRows.resize(111, 26)
         sizePolicy = QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(MaxRows.sizePolicy().hasHeightForWidth())
         MaxRows.setSizePolicy(sizePolicy)
-        MaxRows.setMinimumSize(QSize(111, 22))
-        MaxRows.setMaximumSize(QSize(111, 22))
+        MaxRows.setMinimumSize(QSize(111, 26))
+        MaxRows.setMaximumSize(QSize(111, 26))
         font = QFont()
         font.setFamilies([u"Verdana"])
         font.setPointSize(6)
         MaxRows.setFont(font)
-        self.formLayout = QFormLayout(MaxRows)
-        self.formLayout.setObjectName(u"formLayout")
-        self.formLayout.setHorizontalSpacing(1)
-        self.formLayout.setVerticalSpacing(1)
-        self.formLayout.setContentsMargins(1, 1, 1, 1)
+        self.horizontalLayout = QHBoxLayout(MaxRows)
+        self.horizontalLayout.setSpacing(0)
+        self.horizontalLayout.setObjectName(u"horizontalLayout")
+        self.horizontalLayout.setContentsMargins(1, 1, 1, 1)
         self.label = QLabel(MaxRows)
         self.label.setObjectName(u"label")
         sizePolicy.setHeightForWidth(self.label.sizePolicy().hasHeightForWidth())
@@ -48,18 +47,33 @@ class Ui_MaxRows(object):
         self.label.setFont(font)
         self.label.setAlignment(Qt.AlignRight|Qt.AlignTrailing|Qt.AlignVCenter)
 
-        self.formLayout.setWidget(0, QFormLayout.LabelRole, self.label)
+        self.horizontalLayout.addWidget(self.label)
 
         self.edt_max_rows = QLineEdit(MaxRows)
         self.edt_max_rows.setObjectName(u"edt_max_rows")
         sizePolicy.setHeightForWidth(self.edt_max_rows.sizePolicy().hasHeightForWidth())
         self.edt_max_rows.setSizePolicy(sizePolicy)
-        self.edt_max_rows.setMinimumSize(QSize(60, 18))
-        self.edt_max_rows.setMaximumSize(QSize(60, 18))
+        self.edt_max_rows.setMinimumSize(QSize(36, 18))
+        self.edt_max_rows.setMaximumSize(QSize(36, 18))
         self.edt_max_rows.setFont(font)
+        self.edt_max_rows.setMaxLength(6)
         self.edt_max_rows.setAlignment(Qt.AlignRight|Qt.AlignTrailing|Qt.AlignVCenter)
 
-        self.formLayout.setWidget(0, QFormLayout.FieldRole, self.edt_max_rows)
+        self.horizontalLayout.addWidget(self.edt_max_rows)
+
+        self.btn_ok = QPushButton(MaxRows)
+        self.btn_ok.setObjectName(u"btn_ok")
+        sizePolicy.setHeightForWidth(self.btn_ok.sizePolicy().hasHeightForWidth())
+        self.btn_ok.setSizePolicy(sizePolicy)
+        self.btn_ok.setMinimumSize(QSize(20, 20))
+        self.btn_ok.setMaximumSize(QSize(20, 20))
+        icon = QIcon()
+        icon.addFile(u"resources/tick.svg", QSize(), QIcon.Normal, QIcon.Off)
+        self.btn_ok.setIcon(icon)
+        self.btn_ok.setIconSize(QSize(18, 18))
+        self.btn_ok.setFlat(True)
+
+        self.horizontalLayout.addWidget(self.btn_ok)
 
 
         self.retranslateUi(MaxRows)
@@ -70,5 +84,7 @@ class Ui_MaxRows(object):
     def retranslateUi(self, MaxRows):
         MaxRows.setWindowTitle(QCoreApplication.translate("MaxRows", u"Form", None))
         self.label.setText(QCoreApplication.translate("MaxRows", u"Max rows:", None))
+        self.edt_max_rows.setPlaceholderText(QCoreApplication.translate("MaxRows", u"press return to confirm", None))
+        self.btn_ok.setText("")
     # retranslateUi
 
