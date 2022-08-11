@@ -3,7 +3,7 @@ config:
     aliases: aliases.yaml
     highlight: highlight.yaml
   rcv_text:
-    auto_scroll: true
+    auto_scroll: false
     hex: false
     max_rows: 20000
   rect:

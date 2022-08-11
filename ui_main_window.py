@@ -291,6 +291,22 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout.addWidget(self.btn_aliases)
 
+        self.btn_actions = QPushButton(self.groupbox_bottom)
+        self.btn_actions.setObjectName(u"btn_actions")
+        self.btn_actions.setEnabled(False)
+        sizePolicy2.setHeightForWidth(self.btn_actions.sizePolicy().hasHeightForWidth())
+        self.btn_actions.setSizePolicy(sizePolicy2)
+        self.btn_actions.setMinimumSize(QSize(24, 24))
+        self.btn_actions.setMaximumSize(QSize(24, 24))
+        icon11 = QIcon()
+        icon11.addFile(u"resources/action.svg", QSize(), QIcon.Normal, QIcon.Off)
+        self.btn_actions.setIcon(icon11)
+        self.btn_actions.setIconSize(QSize(18, 18))
+        self.btn_actions.setCheckable(True)
+        self.btn_actions.setFlat(True)
+
+        self.horizontalLayout.addWidget(self.btn_actions)
+
         self.horizontalspacer_bottom = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
         self.horizontalLayout.addItem(self.horizontalspacer_bottom)
@@ -376,6 +392,7 @@ class Ui_MainWindow(object):
         self.btn_aliases.setToolTip(QCoreApplication.translate("MainWindow", u"Send commands", None))
 #endif // QT_CONFIG(tooltip)
         self.btn_aliases.setText("")
+        self.btn_actions.setText("")
         self.edt_received.setMarkdown("")
         self.edt_received.setHtml(QCoreApplication.translate("MainWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"

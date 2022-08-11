@@ -12,6 +12,7 @@ import signal_agent
 import gui_uart_settings
 import gui_max_rows
 import gui_aliases
+import gui_actions
 import serial_tool
 import ui_main_window
 import config
@@ -106,6 +107,7 @@ class MainWindow(QMainWindow, ui_main_window.Ui_MainWindow):
         self.uart_settings = gui_uart_settings.UartSettingsWindow(self)
         self.gui_max_rows = gui_max_rows.GuiMaxRowsWindow(self)
         self.gui_aliases = gui_aliases.GuiAliasesWindow(self)
+        self.gui_actions = gui_actions.GuiActionsWindow(self)
         self.setupUi(self)
 
     def setupUi(self, p_wnd):
@@ -113,8 +115,9 @@ class MainWindow(QMainWindow, ui_main_window.Ui_MainWindow):
 
         self.uart_settings.setupUi(self)
         self.gui_max_rows.setupUi(self)
-        self.highlighter.set_document(self.edt_received.document())
         self.gui_aliases.setupUi(self)
+        self.gui_actions.setupUi(self)
+        self.highlighter.set_document(self.edt_received.document())
         self.signal.connect_gui(self._gui_agent)
 
         self.setWindowTitle('Trailing')
@@ -154,6 +157,7 @@ class MainWindow(QMainWindow, ui_main_window.Ui_MainWindow):
         self.btn_hex_sent.toggled.connect(self.switch_hex_output)
         self.btn_aliases.toggled.connect(self.switch_aliases)
         self.groupbox_bottom.clicked.connect(self.un_click_all_bottom_buttons)
+        self.btn_actions.clicked.connect(self.switch_actions)
 
     # misc gui functions
     @staticmethod
@@ -288,6 +292,15 @@ class MainWindow(QMainWindow, ui_main_window.Ui_MainWindow):
         else:
             self.gui_aliases.hide()
 
+    def switch_actions(self, v):
+        if v:
+            g1 = self.btn_actions.geometry()
+            g2 = self.edt_received.geometry()
+            self.gui_actions.move(g1.x() - 32, g2.y() + g2.height() - self.gui_actions.height() - 1)
+            self.gui_actions.show()
+        else:
+            self.gui_actions.hide()
+
     # thread signal slot functions
     def _gui_agent(self, method, args):
         m = getattr(self, method)
@@ -311,6 +324,7 @@ class MainWindow(QMainWindow, ui_main_window.Ui_MainWindow):
         self.edt_sent.setEnabled(True)
         self.btn_hex_sent.setEnabled(True)
         self.btn_send.setEnabled(True)
+        self.btn_actions.setEnabled(True)
         self.uart_settings.stop_refresh()
         if not self.btn_hex_sent.isChecked():
             self.btn_carrier_return.setEnabled(True)
@@ -328,6 +342,7 @@ class MainWindow(QMainWindow, ui_main_window.Ui_MainWindow):
         self.btn_carrier_return.setEnabled(False)
         self.btn_line_feed.setEnabled(False)
         self.btn_aliases.setEnabled(False)
+        self.btn_actions.setEnabled(False)
         self.uart_settings.start_refresh()
 
     @staticmethod

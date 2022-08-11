@@ -1,0 +1,7 @@
+---
+actions:
+  test:
+    - cmd: '[AUTO,ON]'
+      delay: 5
+    - cmd: '[AUTO,OFF]'
+      delay: 5

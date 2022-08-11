@@ -32,6 +32,10 @@ class Config:
         tmp = self._get_root()['cfg_files']
         return tmp['aliases']
 
+    def get_actions_config_filename(self):
+        tmp = self._get_root()['cfg_files']
+        return tmp['actions']
+
     def set_uart_settings(self, name, baud, data, parity, stop):
         tmp = self._get_root()['uart']
         tmp['name'] = name
