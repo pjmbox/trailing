@@ -96,7 +96,7 @@
         </property>
         <property name="font">
          <font>
-          <family>Tahoma</family>
+          <family>Verdana</family>
          </font>
         </property>
         <property name="autoFillBackground">
@@ -105,8 +105,17 @@
         <property name="styleSheet">
          <string notr="true">border: 1px solid grey;</string>
         </property>
+        <property name="sizeAdjustPolicy">
+         <enum>QComboBox::AdjustToContents</enum>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>18</width>
+          <height>18</height>
+         </size>
+        </property>
         <property name="frame">
-         <bool>false</bool>
+         <bool>true</bool>
         </property>
        </widget>
       </item>
@@ -203,9 +212,32 @@
     </widget>
    </item>
    <item>
-    <widget class="QGroupBox" name="groupbox_bottom">
-     <property name="title">
-      <string>GroupBox</string>
+    <widget class="QTableWidget" name="tbl_actions">
+     <property name="font">
+      <font>
+       <family>Tahoma</family>
+      </font>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::Box</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Plain</enum>
+     </property>
+     <property name="alternatingRowColors">
+      <bool>true</bool>
+     </property>
+     <property name="selectionMode">
+      <enum>QAbstractItemView::NoSelection</enum>
+     </property>
+     <property name="selectionBehavior">
+      <enum>QAbstractItemView::SelectRows</enum>
+     </property>
+     <property name="wordWrap">
+      <bool>false</bool>
+     </property>
+     <property name="cornerButtonEnabled">
+      <bool>true</bool>
      </property>
     </widget>
    </item>

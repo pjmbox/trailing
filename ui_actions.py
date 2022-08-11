@@ -15,9 +15,10 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QComboBox, QGroupBox, QHBoxLayout,
-    QPushButton, QSizePolicy, QSpacerItem, QVBoxLayout,
-    QWidget)
+from PySide6.QtWidgets import (QAbstractItemView, QApplication, QComboBox, QFrame,
+    QGroupBox, QHBoxLayout, QHeaderView, QPushButton,
+    QSizePolicy, QSpacerItem, QTableWidget, QTableWidgetItem,
+    QVBoxLayout, QWidget)
 
 class Ui_Actions(object):
     def setupUi(self, Actions):
@@ -53,11 +54,13 @@ class Ui_Actions(object):
         self.cmb_select.setMinimumSize(QSize(150, 18))
         self.cmb_select.setMaximumSize(QSize(150, 18))
         font = QFont()
-        font.setFamilies([u"Tahoma"])
+        font.setFamilies([u"Verdana"])
         self.cmb_select.setFont(font)
         self.cmb_select.setAutoFillBackground(False)
         self.cmb_select.setStyleSheet(u"border: 1px solid grey;")
-        self.cmb_select.setFrame(False)
+        self.cmb_select.setSizeAdjustPolicy(QComboBox.AdjustToContents)
+        self.cmb_select.setIconSize(QSize(18, 18))
+        self.cmb_select.setFrame(True)
 
         self.horizontalLayout.addWidget(self.cmb_select)
 
@@ -96,10 +99,20 @@ class Ui_Actions(object):
 
         self.verticalLayout.addWidget(self.groupbox_upper)
 
-        self.groupbox_bottom = QGroupBox(Actions)
-        self.groupbox_bottom.setObjectName(u"groupbox_bottom")
+        self.tbl_actions = QTableWidget(Actions)
+        self.tbl_actions.setObjectName(u"tbl_actions")
+        font1 = QFont()
+        font1.setFamilies([u"Tahoma"])
+        self.tbl_actions.setFont(font1)
+        self.tbl_actions.setFrameShape(QFrame.Box)
+        self.tbl_actions.setFrameShadow(QFrame.Plain)
+        self.tbl_actions.setAlternatingRowColors(True)
+        self.tbl_actions.setSelectionMode(QAbstractItemView.NoSelection)
+        self.tbl_actions.setSelectionBehavior(QAbstractItemView.SelectRows)
+        self.tbl_actions.setWordWrap(False)
+        self.tbl_actions.setCornerButtonEnabled(True)
 
-        self.verticalLayout.addWidget(self.groupbox_bottom)
+        self.verticalLayout.addWidget(self.tbl_actions)
 
 
         self.retranslateUi(Actions)
@@ -112,6 +125,5 @@ class Ui_Actions(object):
         self.groupbox_upper.setTitle("")
         self.btn_switch.setText("")
         self.btn_refresh.setText("")
-        self.groupbox_bottom.setTitle(QCoreApplication.translate("Actions", u"GroupBox", None))
     # retranslateUi
 

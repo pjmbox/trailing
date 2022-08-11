@@ -8,7 +8,7 @@
 
 import yaml
 import ui_actions
-from PySide6.QtWidgets import QGroupBox, QListWidgetItem
+from PySide6.QtWidgets import QGroupBox
 
 
 class GuiActionsWindow(QGroupBox, ui_actions.Ui_Actions):
@@ -20,11 +20,26 @@ class GuiActionsWindow(QGroupBox, ui_actions.Ui_Actions):
         self.load_config()
 
     def load_config(self):
-        with open(self.parent.config.get_aliases_config_filename()) as f:
-            self.actions = yaml.safe_load(f)
+        with open(self.parent.config.get_actions_config_filename()) as f:
+            self.actions = yaml.safe_load(f)['actions']
+
+    def init_cmb(self):
+        self.cmb_select.clear()
+        tmp = ['']
+        tmp.extend(self.actions.keys())
+        self.cmb_select.addItems(tmp)
+        self.cmb_select.setCurrentText('')
+        self.tbl_actions.clear()
 
     def setupUi(self, p_wnd):
         super(GuiActionsWindow, self).setupUi(self)
         self.setParent(p_wnd)
         self.setAutoFillBackground(True)
         self.hide()
+        self.btn_refresh.clicked.connect(self.refresh)
+        self.refresh()
+
+    # slot functions
+    def refresh(self):
+        self.load_config()
+        self.init_cmb()

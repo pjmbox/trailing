@@ -1,9 +1,10 @@
 config:
   cfg_files:
+    actions: actions.yaml
     aliases: aliases.yaml
     highlight: highlight.yaml
   rcv_text:
-    auto_scroll: false
+    auto_scroll: true
     hex: false
     max_rows: 20000
   rect:
