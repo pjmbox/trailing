@@ -45,11 +45,8 @@ class GuiAliasesWindow(QGroupBox, ui_aliases.Ui_Aliases):
             self.list_aliases.addItem(item)
         self.set_size(len(aliases), length)
 
-    def setup_text_aliases(self):
-        self._init_aliases_items(self.text_aliases)
-
-    def setup_hex_aliases(self):
-        self._init_aliases_items(self.hex_aliases)
+    def setup_aliases(self, is_hex):
+        self._init_aliases_items(self.hex_aliases if is_hex else self.text_aliases)
 
     def list_double_click(self, item):
         self.parent.send(item.data(0))

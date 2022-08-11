@@ -1,7 +1,11 @@
 ---
 actions:
   test:
+    is_hex: false
+    actions:
     - cmd: '[AUTO,ON]'
-      delay: 5
-    - cmd: '[AUTO,OFF]'
+      flag: 'Sync initial done'
+      delay: 0
+    - cmd: '[AUTO,CHANGEIP,1]'
+      flag: ~
       delay: 5

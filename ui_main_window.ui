@@ -162,7 +162,7 @@
           </font>
          </property>
          <property name="toolTip">
-          <string>Uart settings</string>
+          <string>UART settings</string>
          </property>
          <property name="styleSheet">
           <string notr="true">text-align: left; vertical-align: middle ;padding: 2px 2px 2px 2px; </string>
@@ -229,7 +229,7 @@
           </size>
          </property>
          <property name="toolTip">
-          <string>Auto scroll down</string>
+          <string>Screen scroll down</string>
          </property>
          <property name="text">
           <string/>
@@ -286,7 +286,7 @@
           </size>
          </property>
          <property name="toolTip">
-          <string>Show hex string</string>
+          <string>Read hex</string>
          </property>
          <property name="text">
           <string/>
@@ -377,7 +377,7 @@
           </size>
          </property>
          <property name="toolTip">
-          <string>Open/Close UART</string>
+          <string>Switch UART</string>
          </property>
          <property name="styleSheet">
           <string notr="true">padding: 2px;</string>
@@ -516,7 +516,7 @@
           </font>
          </property>
          <property name="toolTip">
-          <string>Send text</string>
+          <string/>
          </property>
          <property name="maxLength">
           <number>512</number>
@@ -551,6 +551,9 @@
            <width>24</width>
            <height>24</height>
           </size>
+         </property>
+         <property name="toolTip">
+          <string>Send</string>
          </property>
          <property name="text">
           <string/>
@@ -688,7 +691,7 @@
           </size>
          </property>
          <property name="toolTip">
-          <string>Send hex string</string>
+          <string>Send hex</string>
          </property>
          <property name="text">
           <string/>
@@ -735,7 +738,7 @@
           </size>
          </property>
          <property name="toolTip">
-          <string>Send commands</string>
+          <string>Command shortcuts</string>
          </property>
          <property name="text">
           <string/>
@@ -781,12 +784,15 @@
            <height>24</height>
           </size>
          </property>
+         <property name="toolTip">
+          <string>Command sequences</string>
+         </property>
          <property name="text">
           <string/>
          </property>
          <property name="icon">
           <iconset>
-           <normaloff>resources/action.svg</normaloff>resources/action.svg</iconset>
+           <normaloff>resources/actions.svg</normaloff>resources/actions.svg</iconset>
          </property>
          <property name="iconSize">
           <size>

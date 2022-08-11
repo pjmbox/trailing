@@ -155,9 +155,9 @@ class MainWindow(QMainWindow, ui_main_window.Ui_MainWindow):
         self.btn_send.clicked.connect(self.send_to_uart)
         self.edt_sent.returnPressed.connect(self.send_to_uart)
         self.btn_hex_sent.toggled.connect(self.switch_hex_output)
+        self.btn_actions.clicked.connect(self.switch_actions)
         self.btn_aliases.toggled.connect(self.switch_aliases)
         self.groupbox_bottom.clicked.connect(self.un_click_all_bottom_buttons)
-        self.btn_actions.clicked.connect(self.switch_actions)
 
     # misc gui functions
     @staticmethod
@@ -224,6 +224,9 @@ class MainWindow(QMainWindow, ui_main_window.Ui_MainWindow):
 
     def switch_uart_settings(self, v):
         if v:
+            if self.btn_max_rows.isChecked():
+                self.btn_max_rows.setChecked(False)
+                self.gui_max_rows.hide()
             g = self.btn_uart_settings.geometry()
             self.uart_settings.move(g.x() + 1, g.y() + g.height() + 4)
             self.uart_settings.show()
@@ -273,6 +276,9 @@ class MainWindow(QMainWindow, ui_main_window.Ui_MainWindow):
 
     def switch_max_rows(self, v):
         if v:
+            if self.btn_uart_settings.isChecked():
+                self.btn_uart_settings.setChecked(False)
+                self.uart_settings.hide()
             g = self.btn_max_rows.geometry()
             self.gui_max_rows.move(g.x() + 1, g.y() + g.height() + 4)
             self.gui_max_rows.show()
@@ -281,10 +287,10 @@ class MainWindow(QMainWindow, ui_main_window.Ui_MainWindow):
 
     def switch_aliases(self, v):
         if v:
-            if self.btn_hex_sent.isChecked():
-                self.gui_aliases.setup_hex_aliases()
-            else:
-                self.gui_aliases.setup_text_aliases()
+            if self.btn_actions.isChecked():
+                self.btn_actions.setChecked(False)
+                self.gui_actions.hide()
+            self.gui_aliases.setup_aliases(self.btn_hex_sent.isChecked())
             g1 = self.btn_aliases.geometry()
             g2 = self.edt_received.geometry()
             self.gui_aliases.move(g1.x() - 32, g2.y() + g2.height() - self.gui_aliases.height() - 1)
@@ -294,6 +300,9 @@ class MainWindow(QMainWindow, ui_main_window.Ui_MainWindow):
 
     def switch_actions(self, v):
         if v:
+            if self.btn_aliases.isChecked():
+                self.btn_aliases.setChecked(False)
+                self.gui_aliases.hide()
             g1 = self.btn_actions.geometry()
             g2 = self.edt_received.geometry()
             self.gui_actions.move(g1.x() - 32, g2.y() + g2.height() - self.gui_actions.height() - 1)
