@@ -24,7 +24,10 @@ class Ui_Actions(object):
     def setupUi(self, Actions):
         if not Actions.objectName():
             Actions.setObjectName(u"Actions")
-        Actions.resize(400, 300)
+        Actions.resize(500, 300)
+        font = QFont()
+        font.setFamilies([u"Verdana"])
+        Actions.setFont(font)
         self.verticalLayout = QVBoxLayout(Actions)
         self.verticalLayout.setSpacing(0)
         self.verticalLayout.setObjectName(u"verticalLayout")
@@ -53,8 +56,6 @@ class Ui_Actions(object):
         self.cmb_select.setSizePolicy(sizePolicy1)
         self.cmb_select.setMinimumSize(QSize(150, 18))
         self.cmb_select.setMaximumSize(QSize(150, 18))
-        font = QFont()
-        font.setFamilies([u"Verdana"])
         self.cmb_select.setFont(font)
         self.cmb_select.setAutoFillBackground(False)
         self.cmb_select.setStyleSheet(u"border: 1px solid grey;")
@@ -101,16 +102,16 @@ class Ui_Actions(object):
 
         self.tbl_actions = QTableWidget(Actions)
         self.tbl_actions.setObjectName(u"tbl_actions")
-        font1 = QFont()
-        font1.setFamilies([u"Tahoma"])
-        self.tbl_actions.setFont(font1)
+        self.tbl_actions.setFont(font)
         self.tbl_actions.setFrameShape(QFrame.Box)
         self.tbl_actions.setFrameShadow(QFrame.Plain)
         self.tbl_actions.setAlternatingRowColors(True)
-        self.tbl_actions.setSelectionMode(QAbstractItemView.NoSelection)
+        self.tbl_actions.setSelectionMode(QAbstractItemView.SingleSelection)
         self.tbl_actions.setSelectionBehavior(QAbstractItemView.SelectRows)
+        self.tbl_actions.setGridStyle(Qt.SolidLine)
         self.tbl_actions.setWordWrap(False)
-        self.tbl_actions.setCornerButtonEnabled(True)
+        self.tbl_actions.horizontalHeader().setHighlightSections(False)
+        self.tbl_actions.horizontalHeader().setStretchLastSection(True)
 
         self.verticalLayout.addWidget(self.tbl_actions)
 

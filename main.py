@@ -10,7 +10,7 @@ import coloredlogs
 import os
 import sys
 import gui_main_window
-from PySide6.QtWidgets import QApplication
+from PySide6.QtWidgets import QApplication, QStyleFactory
 
 
 class Main:
@@ -36,6 +36,7 @@ class Main:
         cls.setup_logging()
         app = QApplication(sys.argv)
         tmp = gui_main_window.MainWindow()
+        app.setStyle(QStyleFactory.create("windowsvista"))
         tmp.show()
         try:
             sys.exit(app.exec())
