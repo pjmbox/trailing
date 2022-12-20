@@ -6,7 +6,6 @@
 # @File    : serial_tool.py
 # ---------------------
 
-import io
 import os
 import time
 import binascii
@@ -69,8 +68,8 @@ class SerialTool:
                                           baudrate=self.baud,
                                           bytesize=self.databit,
                                           parity=self.paritybit,
-                                          stopbits=self.stopbit)
-        self._uart_client.timeout = 30
+                                          stopbits=self.stopbit,
+                                          timeout=0.5)
         logging.info('[%s] uart open status is %s' % (self.name, self._uart_client.is_open))
 
     def after_loop(self):
@@ -90,7 +89,7 @@ class SerialTool:
         err_count = self.err_count_max
         while not self._terminated:
             try:
-                tmp = super(io.IOBase, self._uart_client).readline()
+                tmp = self.read_line(self._uart_client)
                 ctx = self.get_received_line_context()
                 ctx.line_raw = tmp
                 ctx.time_raw = datetime.datetime.now()

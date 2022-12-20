@@ -9,62 +9,56 @@ import logging
 import serial
 import struct
 import zlib
+import binascii
 
 channel_text = [b'', b'']
 
 
 def _unpack_packet(data):
-    data = struct.unpack("60s I", data)
-    crc32 = data[1]
-    tmp = zlib.crc32(data[0])
+    data, crc32 = struct.unpack("64s I", data)
+    tmp = zlib.crc32(data)
     if crc32 != tmp:
-        raise Exception('crc error: old = %08x, new = %08x, data = %s' % (crc32, tmp, data))
-    data = data[0]
-    data = struct.unpack("59s b", data)
-    tx_sn = (data[1] >> 4) & ((1 << 4) - 1)
-    rx_sn = data[1] & ((1 << 4) - 1)
-    data = data[0]
+        raise Exception('crc error: old = 0x%08x, new = 0x%08x, data = %s' % (crc32, tmp, binascii.hexlify(data)))
+    sync, tmp, data = struct.unpack("H B 61s", data)
+    rx_sn = tmp & 0x0f
+    tx_sn = (tmp >> 4) & 0x0f
     group = []
-    x = 59
+    l = 61
     while True:
-        data = struct.unpack("b %ds" % (x - 1), data)
-        ch = (data[0] >> 6) & ((1 << 2) - 1)
-        cnt = data[0] & ((1 << 6) - 1)
+        tmp, data = struct.unpack("B %ds" % (l - 1), data)
+        ch = (tmp >> 6) & 0x03
+        cnt = tmp & 0x3f
         if cnt == 0:
             break
-        data = data[1]
-        x -= cnt + 1
-        if x == 0:
+        l -= (cnt + 1)
+        if l == 0:
             val = data
         else:
-            data = struct.unpack("%ds %ds" % (cnt, x), data)
-            val = data[0]
-            data = data[1]
+            val, data = struct.unpack("%ds %ds" % (cnt, l), data)
         group.append((ch, val))
-        if x <= 1:
+        if l <= 1:
             break
     return tx_sn, rx_sn, crc32, group
 
 
 def fetch_data(client: serial.Serial):
-    tmp = []
+    status = 100
     while True:
-        try:
-            tmp = client.read(64)
-            if len(tmp) != 64:
-                client.flushInput()
-                continue
-            tmp = _unpack_packet(tmp)
-            break
-        except Exception as e:
-            logging.error(e)
-            client.flushInput()
-            continue
-    for ch, txt in tmp[3]:
+        if status == 100:
+            tmp = client.read(1)
+            if tmp == b'\xaa':
+                status = 200
+        elif status == 200:
+            tmp = client.read(1)
+            if tmp == b'\x55':
+                tmp = b'\xaa\x55' + client.read(66)
+                break
+            elif tmp != b'\xaa':
+                status = 100
+    tx_sn, rx_sn, crc32, group = _unpack_packet(tmp)
+    for ch, txt in group:
         if ch < 2:
             channel_text[ch] += txt
-        else:
-            logging.debug('discard pkt, chn: %d, data: %s' % (ch, txt))
 
 
 def read_cache():
@@ -78,8 +72,8 @@ def read_cache():
 
 
 def read_line(client: serial.Serial):
-    tmp = read_cache()
-    if tmp is not None:
-        return tmp
-    fetch_data(client)
-    return read_cache()
+    while True:
+        tmp = read_cache()
+        if tmp is not None:
+            return tmp
+        fetch_data(client)
