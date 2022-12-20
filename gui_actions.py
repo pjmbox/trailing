@@ -7,7 +7,10 @@
 # ---------------------
 
 import yaml
+
+import agent_action
 import ui_actions
+import agent_signal
 from PySide6.QtWidgets import QGroupBox, QTableWidgetItem, QAbstractItemView
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QColor
@@ -18,10 +21,12 @@ class GuiActionsWindow(QGroupBox, ui_actions.Ui_Actions):
     def __init__(self, parent):
         super(GuiActionsWindow, self).__init__()
         self.parent = parent
+        self.signal = agent_signal.GuiAgentAction()
         self.act_config = None
         self.is_hex = None
         self.acts = None
         self.act_ind = None
+        self.agent = None
         self.load_config()
 
     def load_config(self):
@@ -39,9 +44,11 @@ class GuiActionsWindow(QGroupBox, ui_actions.Ui_Actions):
     def setupUi(self, p_wnd):
         super(GuiActionsWindow, self).setupUi(self)
         self.setParent(p_wnd)
+        self.signal.connect_gui(self._gui_agent)
         self.setAutoFillBackground(True)
         self.hide()
         self.btn_refresh.clicked.connect(self.refresh)
+        self.btn_switch.clicked.connect(self.switch_action)
         self.cmb_select.currentIndexChanged.connect(self.action_change)
         self.refresh()
 
@@ -64,7 +71,7 @@ class GuiActionsWindow(QGroupBox, ui_actions.Ui_Actions):
 
     def _generate_table_header_item(self, v):
         tmp = self._generate_table_item(v)
-        tmp.setBackground(QColor(100, 100, 100))
+        tmp.setBackground(QColor(20, 200, 200))
         return tmp
 
     def action_change(self):
@@ -78,24 +85,47 @@ class GuiActionsWindow(QGroupBox, ui_actions.Ui_Actions):
             self.act_ind = 0
             self.tbl_actions.clear()
             self.tbl_actions.setFocusPolicy(Qt.NoFocus)
-            self.tbl_actions.setColumnCount(3)
-            self.tbl_actions.setColumnWidth(0, 200)
-            self.tbl_actions.setColumnWidth(1, 50)
-            self.tbl_actions.setColumnWidth(2, 200)
             self.tbl_actions.setEditTriggers(QAbstractItemView.NoEditTriggers)
             self.tbl_actions.setRowCount(len(self.acts))
-            self.tbl_actions.setHorizontalHeaderItem(0, self._generate_table_header_item('flag'))
-            self.tbl_actions.setHorizontalHeaderItem(1, self._generate_table_header_item('delay'))
-            self.tbl_actions.setHorizontalHeaderItem(2, self._generate_table_header_item('command'))
             self.tbl_actions.horizontalHeader().setEnabled(True)
+            self.tbl_actions.setColumnCount(4)
+            self.tbl_actions.setColumnWidth(0, 200)
+            self.tbl_actions.setColumnWidth(1, 60)
+            self.tbl_actions.setColumnWidth(2, 40)
+            self.tbl_actions.setColumnWidth(3, 150)
+            self.tbl_actions.setHorizontalHeaderItem(0, self._generate_table_header_item('flag'))
+            self.tbl_actions.setHorizontalHeaderItem(1, self._generate_table_header_item('timeout'))
+            self.tbl_actions.setHorizontalHeaderItem(2, self._generate_table_header_item('delay'))
+            self.tbl_actions.setHorizontalHeaderItem(3, self._generate_table_header_item('command'))
             for i, a in enumerate(tmp['actions']):
                 self.tbl_actions.setRowHeight(i, 17)
-                cmd = self._generate_table_item(a['cmd'])
                 flag = self._generate_table_item(a['flag'])
+                timeout = self._generate_table_item(a['timeout'])
                 delay = self._generate_table_item(a['delay'])
+                cmd = self._generate_table_item(a['cmd'])
                 self.tbl_actions.setItem(i, 0, flag)
-                self.tbl_actions.setItem(i, 1, delay)
-                self.tbl_actions.setItem(i, 2, cmd)
+                self.tbl_actions.setItem(i, 1, timeout)
+                self.tbl_actions.setItem(i, 2, delay)
+                self.tbl_actions.setItem(i, 3, cmd)
             self.tbl_actions.selectRow(0)
         else:
+            self.tbl_actions.setRowCount(0)
+            self.tbl_actions.setColumnCount(0)
             self.btn_switch.setEnabled(False)
+
+    def switch_action(self):
+        self.btn_switch.setEnabled(False)
+        if self.agent is None:
+            self.agent = agent_action.ActionAgent(self.parent.uart, self.signal)
+        else:
+            self.agent.stop()
+
+    # threading slot functions
+    def _gui_agent(self, method, args):
+        getattr(self, method)(*args)
+
+    def send(self, txt):
+        self.parent.send(txt)
+
+    def is_started(self):
+        pass

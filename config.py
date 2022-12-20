@@ -11,7 +11,7 @@ from PySide6.QtCore import QRect
 
 class Config:
 
-    config_filename = 'config.yaml'
+    config_filename = 'cf_config.yaml'
 
     def __init__(self):
         with open(self.config_filename) as f:

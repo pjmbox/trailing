@@ -10,7 +10,6 @@ from PySide6.QtCore import Signal, QObject
 
 # noinspection PyUnresolvedReferences
 class GuiAgent(QObject):
-
     signal = Signal(str, tuple)
 
     def connect_gui(self, obj):
@@ -22,8 +21,11 @@ class GuiAgent(QObject):
     def _emit_gui(self, method, args):
         self.signal.emit(method, args)
 
-    def append_log(self, ctx):
-        self._emit_gui('append_log', (ctx.time_raw, ctx.dir, ctx.line_text))
+
+class GuiAgentMain(GuiAgent):
+
+    def append_log(self, txt):
+        self._emit_gui('append_log', (txt,))
 
     def uart_is_running(self):
         self._emit_gui('uart_is_running', ())
@@ -33,3 +35,15 @@ class GuiAgent(QObject):
 
     def show_alert(self, title, text):
         self._emit_gui('show_alert', (title, text))
+
+
+class GuiAgentAction(GuiAgent):
+
+    def send(self, txt):
+        self._emit_gui('send', (txt,))
+
+    def is_started(self):
+        self._emit_gui('is_started', ())
+
+    def is_stopped(self):
+        self._emit_gui('is_stopped', ())

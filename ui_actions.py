@@ -31,7 +31,23 @@ class Ui_Actions(object):
         self.verticalLayout = QVBoxLayout(Actions)
         self.verticalLayout.setSpacing(0)
         self.verticalLayout.setObjectName(u"verticalLayout")
-        self.verticalLayout.setContentsMargins(3, 1, 2, 2)
+        self.verticalLayout.setContentsMargins(2, 2, 2, 0)
+        self.tbl_actions = QTableWidget(Actions)
+        self.tbl_actions.setObjectName(u"tbl_actions")
+        self.tbl_actions.setFont(font)
+        self.tbl_actions.setFrameShape(QFrame.StyledPanel)
+        self.tbl_actions.setFrameShadow(QFrame.Sunken)
+        self.tbl_actions.setLineWidth(1)
+        self.tbl_actions.setAlternatingRowColors(True)
+        self.tbl_actions.setSelectionMode(QAbstractItemView.SingleSelection)
+        self.tbl_actions.setSelectionBehavior(QAbstractItemView.SelectRows)
+        self.tbl_actions.setGridStyle(Qt.SolidLine)
+        self.tbl_actions.setWordWrap(False)
+        self.tbl_actions.horizontalHeader().setHighlightSections(False)
+        self.tbl_actions.horizontalHeader().setStretchLastSection(True)
+
+        self.verticalLayout.addWidget(self.tbl_actions)
+
         self.groupbox_upper = QGroupBox(Actions)
         self.groupbox_upper.setObjectName(u"groupbox_upper")
         sizePolicy = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
@@ -99,21 +115,6 @@ class Ui_Actions(object):
 
 
         self.verticalLayout.addWidget(self.groupbox_upper)
-
-        self.tbl_actions = QTableWidget(Actions)
-        self.tbl_actions.setObjectName(u"tbl_actions")
-        self.tbl_actions.setFont(font)
-        self.tbl_actions.setFrameShape(QFrame.Box)
-        self.tbl_actions.setFrameShadow(QFrame.Plain)
-        self.tbl_actions.setAlternatingRowColors(True)
-        self.tbl_actions.setSelectionMode(QAbstractItemView.SingleSelection)
-        self.tbl_actions.setSelectionBehavior(QAbstractItemView.SelectRows)
-        self.tbl_actions.setGridStyle(Qt.SolidLine)
-        self.tbl_actions.setWordWrap(False)
-        self.tbl_actions.horizontalHeader().setHighlightSections(False)
-        self.tbl_actions.horizontalHeader().setStretchLastSection(True)
-
-        self.verticalLayout.addWidget(self.tbl_actions)
 
 
         self.retranslateUi(Actions)

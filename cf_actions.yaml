@@ -7,7 +7,9 @@ actions:
       cmd: '[AUTO,ON]'
       flag: 'Sync initial done'
       delay: 0
+      timeout: 0
     - id: 2
       cmd: '[AUTO,CHANGEIP,1]'
       flag: ~
-      delay: 5
+      delay: 0
+      timeout: 5

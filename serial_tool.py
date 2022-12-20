@@ -16,6 +16,7 @@ import threading
 import datetime
 import logging
 import common
+import conflux
 
 
 class SerialTool:
@@ -35,6 +36,11 @@ class SerialTool:
         self.err_count_max = 8
         self.last_send_time = datetime.datetime.now()
         self.last_read_time = datetime.datetime.now()
+        self.read_line = conflux.read_line
+
+    @staticmethod
+    def _internal_read_line(client):
+        return client.readline()
 
     def register_first_line_handler(self, handler_function):
         self.line_handlers.insert(0, handler_function)
@@ -141,11 +147,12 @@ class SerialTool:
 
 class SerialToolEx(SerialTool):
 
-    def __init__(self, signal, name, port, baud, databit, paritybit, stopbit, hex_input, hex_output):
+    def __init__(self, signal, name, port, baud, databit, paritybit, stopbit, highlighter, hex_input, hex_output):
         super(SerialToolEx, self).__init__(signal, name, port, baud, databit, paritybit, stopbit)
         self.encoding = 'ascii'
         self.error_policy = 'ignore'
         self.serial_log_filename = 'log' + os.sep + '%s_%s.log' % (name, datetime.datetime.now().strftime('%Y%m%d'))
+        self.highlighter = highlighter
         self.hex_input = hex_input
         self.hex_output = hex_output
         self.serial_log_fd = None
@@ -176,7 +183,8 @@ class SerialToolEx(SerialTool):
 
     def gui_logging(self, ctx):
         if not self._terminated:
-            self.signal.append_log(ctx)
+            txt = self.highlighter.format_log_text(ctx.time_raw, ctx.dir, ctx.line_text)
+            self.signal.append_log(txt)
 
     def parser_register(self, parser_func):
         self.parsers.append(parser_func)

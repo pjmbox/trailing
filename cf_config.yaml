@@ -1,8 +1,8 @@
 config:
   cfg_files:
-    actions: actions.yaml
-    aliases: aliases.yaml
-    highlight: highlight.yaml
+    actions: cf_actions.yaml
+    aliases: cf_aliases.yaml
+    highlight: cf_highlight.yaml
   rcv_text:
     auto_scroll: true
     hex: false

@@ -8,7 +8,7 @@
 import logging
 
 import common
-import signal_agent
+import agent_signal
 import gui_uart_settings
 import gui_max_rows
 import gui_aliases
@@ -93,6 +93,12 @@ class UartHighLighter(QSyntaxHighlighter):
         else:
             return text
 
+    def format_log_text(self, dt, arrow, text):
+        t0 = self.format_timestamp(dt)
+        t1 = self.format_arrow(arrow)
+        t2 = self.format_text(text, arrow)
+        return '%s %s %s' % (t0, t1, t2)
+
 
 class MainWindow(QMainWindow, ui_main_window.Ui_MainWindow):
 
@@ -102,7 +108,7 @@ class MainWindow(QMainWindow, ui_main_window.Ui_MainWindow):
         self.last_vb_max = None
         self.tgt_vb_pos = None
         self.config = config.Config()
-        self.signal = signal_agent.GuiAgent()
+        self.signal = agent_signal.GuiAgentMain()
         self.highlighter = UartHighLighter(self)
         self.uart_settings = gui_uart_settings.UartSettingsWindow(self)
         self.gui_max_rows = gui_max_rows.GuiMaxRowsWindow(self)
@@ -242,7 +248,7 @@ class MainWindow(QMainWindow, ui_main_window.Ui_MainWindow):
             p, b, db, pb, sb = self.uart_settings.get_settings()
             hr = self.btn_hex_received.isChecked()
             hs = self.btn_hex_sent.isChecked()
-            self.uart = serial_tool.SerialToolEx(self.signal, p.lower(), p, b, db, pb, sb, hr, hs)
+            self.uart = serial_tool.SerialToolEx(self.signal, p.lower(), p, b, db, pb, sb, self.highlighter, hr, hs)
             self.uart.start()
         else:
             self.btn_uart_switch.setEnabled(False)
@@ -315,16 +321,14 @@ class MainWindow(QMainWindow, ui_main_window.Ui_MainWindow):
         m = getattr(self, method)
         m(*args)
 
-    def append_log(self, dt, arrow, text):
-        old_pos = self.edt_received.verticalScrollBar().value()
-        t0 = self.highlighter.format_timestamp(dt)
-        t1 = self.highlighter.format_arrow(arrow)
-        t2 = self.highlighter.format_text(text, arrow)
-        self.edt_received.append('%s %s %s' % (t0, t1, t2))
+    def append_log(self, txt):
         if self.btn_scroll_down.isChecked():
+            self.edt_received.append(txt)
             self.edt_received.moveCursor(QTextCursor.End)
             self.edt_received.moveCursor(QTextCursor.StartOfLine)
         else:
+            old_pos = self.edt_received.verticalScrollBar().value()
+            self.edt_received.append(txt)
             self.edt_received.verticalScrollBar().setValue(old_pos)
 
     def uart_is_running(self):
@@ -350,7 +354,11 @@ class MainWindow(QMainWindow, ui_main_window.Ui_MainWindow):
         self.btn_send.setEnabled(False)
         self.btn_carrier_return.setEnabled(False)
         self.btn_line_feed.setEnabled(False)
+        if self.btn_aliases.isChecked():
+            self.btn_aliases.setChecked(False)
         self.btn_aliases.setEnabled(False)
+        if self.btn_actions.isChecked():
+            self.btn_actions.setChecked(False)
         self.btn_actions.setEnabled(False)
         self.uart_settings.start_refresh()
 
