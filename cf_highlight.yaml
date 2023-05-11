@@ -26,4 +26,13 @@ highlight:
   - pattern: 'ERROR'
     weight: 'Bold'
     color: 'red'
+  - pattern: 'DBG'
+    weight: 'Bold'
+    color: 'darkGreen'
+  - pattern: 'INF'
+    weight: 'Bold'
+    color: 'darkBlue'
+  - pattern: 'ERR'
+    weight: 'Bold'
+    color: 'red'
 

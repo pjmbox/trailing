@@ -17,6 +17,8 @@ class Main:
 
     @staticmethod
     def setup_logging(level=logging.DEBUG, log_folder='log', filename='mainwindow.log'):
+        if not os.path.exists(log_folder):
+            os.mkdir(log_folder)
         log_filename = None
         if filename is not None and log_folder is not None:
             log_filename = log_folder + os.sep + filename
