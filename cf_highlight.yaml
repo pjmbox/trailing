@@ -1,6 +1,6 @@
 highlight:
   timestamp:
-    datetime_fmt_str: '%Y-%m-%d %H:%M:%S.%f'
+    datetime_fmt_str: '%H:%M:%S.%f'
     size: 2
     color: 'maroon'
   arrow:
@@ -20,7 +20,7 @@ highlight:
   - pattern: 'INFO'
     weight: 'Bold'
     color: 'darkBlue'
-  - pattern: 'WARNING'
+  - pattern: 'WARNNING'
     weight: 'Bold'
     color: 'darkYellow'
   - pattern: 'ERROR'

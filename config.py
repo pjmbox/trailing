@@ -24,6 +24,10 @@ class Config:
         with open(self.config_filename, 'w') as f:
             yaml.safe_dump(self.config, f)
 
+    def is_conflux_enabled(self):
+        tmp = self._get_root()['conflux']
+        return tmp['enabled']
+
     def get_highlight_config_filename(self):
         tmp = self._get_root()['cfg_files']
         return tmp['highlight']

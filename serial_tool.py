@@ -35,11 +35,14 @@ class SerialTool:
         self.err_count_max = 8
         self.last_send_time = datetime.datetime.now()
         self.last_read_time = datetime.datetime.now()
-        self.read_line = conflux.read_line
+        self.read_line = self._internal_read_line
 
     @staticmethod
     def _internal_read_line(client):
         return client.readline()
+
+    def set_read_line_method(self, read_line):
+        self.read_line = read_line
 
     def register_first_line_handler(self, handler_function):
         self.line_handlers.insert(0, handler_function)

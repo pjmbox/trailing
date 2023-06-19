@@ -3,6 +3,8 @@ config:
     actions: cf_actions.yaml
     aliases: cf_aliases.yaml
     highlight: cf_highlight.yaml
+  conflux:
+    enabled: false
   rcv_text:
     auto_scroll: true
     hex: false
@@ -19,6 +21,6 @@ config:
   uart:
     baud: 115200
     data: 8
-    name: ''
+    name: COM5
     parity: N
     stop: 1.0

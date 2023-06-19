@@ -9,6 +9,7 @@ import logging
 
 import common
 import agent_signal
+import conflux
 import gui_uart_settings
 import gui_max_rows
 import gui_aliases
@@ -249,6 +250,8 @@ class MainWindow(QMainWindow, ui_main_window.Ui_MainWindow):
             hr = self.btn_hex_received.isChecked()
             hs = self.btn_hex_sent.isChecked()
             self.uart = serial_tool.SerialToolEx(self.signal, p.lower(), p, b, db, pb, sb, self.highlighter, hr, hs)
+            if self.config.is_conflux_enabled():
+                self.uart.set_read_line_method(conflux.read_line)
             self.uart.start()
         else:
             self.btn_uart_switch.setEnabled(False)
