@@ -10,6 +10,7 @@ import logging
 import common
 import agent_signal
 import conflux
+import gui_history
 import gui_uart_settings
 import gui_max_rows
 import gui_aliases
@@ -115,6 +116,7 @@ class MainWindow(QMainWindow, ui_main_window.Ui_MainWindow):
         self.gui_max_rows = gui_max_rows.GuiMaxRowsWindow(self)
         self.gui_aliases = gui_aliases.GuiAliasesWindow(self)
         self.gui_actions = gui_actions.GuiActionsWindow(self)
+        self.gui_history = gui_history.GuiHistoryWindow(self)
         self.setupUi(self)
 
     def setupUi(self, p_wnd):
@@ -172,7 +174,8 @@ class MainWindow(QMainWindow, ui_main_window.Ui_MainWindow):
         wgt.setIcon(QIcon(QPixmap(QImage(fn))))
 
     def send(self, txt):
-        if self.uart is not None:
+        txt = txt.replace(' ', '')
+        if len(txt) > 0 and self.uart is not None:
             if not self.uart.hex_output:
                 if self.btn_carrier_return.isChecked():
                     txt += '\r'
@@ -183,6 +186,10 @@ class MainWindow(QMainWindow, ui_main_window.Ui_MainWindow):
             except Exception as e:
                 logging.error(e)
                 self.show_alert('Error', str(e))
+            if self.uart.hex_output:
+                self.gui_history.append_hex(txt)
+            else:
+                self.gui_history.append_text(txt)
 
     def set_max_rows(self, n):
         self.edt_received.document().setMaximumBlockCount(n)
@@ -206,6 +213,7 @@ class MainWindow(QMainWindow, ui_main_window.Ui_MainWindow):
                                  self.btn_carrier_return.isChecked(),
                                  self.btn_line_feed.isChecked())
         self.config.save()
+        self.gui_history.save()
         if self.uart is not None:
             self.uart.stop()
             self.uart = None

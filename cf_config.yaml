@@ -3,6 +3,7 @@ config:
     actions: cf_actions.yaml
     aliases: cf_aliases.yaml
     highlight: cf_highlight.yaml
+    history: cf_history.yaml
   conflux:
     enabled: false
   rcv_text:
