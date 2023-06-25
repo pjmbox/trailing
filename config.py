@@ -36,6 +36,10 @@ class Config:
         tmp = self._get_root()['cfg_files']
         return tmp['aliases']
 
+    def get_history_config_filename(self):
+        tmp = self._get_root()['cfg_files']
+        return tmp['history']
+
     def get_actions_config_filename(self):
         tmp = self._get_root()['cfg_files']
         return tmp['actions']
