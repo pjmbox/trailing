@@ -93,12 +93,13 @@ class SerialTool:
         while not self._terminated:
             try:
                 tmp = self.read_line(self._uart_client)
-                ctx = self.get_received_line_context()
-                ctx.line_raw = tmp
-                ctx.time_raw = datetime.datetime.now()
-                self.last_read_time = ctx.time_raw
-                for handler in self.line_handlers:
-                    handler(ctx)
+                if tmp is not None and len(tmp) > 0:
+                    ctx = self.get_received_line_context()
+                    ctx.line_raw = tmp
+                    ctx.time_raw = datetime.datetime.now()
+                    self.last_read_time = ctx.time_raw
+                    for handler in self.line_handlers:
+                        handler(ctx)
             except serial.SerialException as e:
                 logging.error('[%s] [%d] uart thread: %s' % (self.name, err_count, e))
                 logging.exception(e)
@@ -153,7 +154,8 @@ class SerialToolEx(SerialTool):
         super(SerialToolEx, self).__init__(signal, name, port, baud, databit, paritybit, stopbit)
         self.encoding = 'ascii'
         self.error_policy = 'ignore'
-        self.serial_log_filename = 'log' + os.sep + '%s_%s.log' % (name, datetime.datetime.now().strftime('%Y%m%d'))
+        _, _n = os.path.split(name)
+        self.serial_log_filename = 'log' + os.sep + '%s_%s.log' % (_n, datetime.datetime.now().strftime('%Y%m%d'))
         self.highlighter = highlighter
         self.hex_input = hex_input
         self.hex_output = hex_output
