@@ -6,8 +6,9 @@
 # @File    : gui_history.py
 # ---------------------
 import yaml
+import os
 import ui_history
-from PySide6.QtWidgets import QGroupBox, QListWidgetItem
+from PySide6.QtWidgets import QGroupBox
 
 
 class GuiHistoryWindow(QGroupBox, ui_history.Ui_History):
@@ -15,7 +16,12 @@ class GuiHistoryWindow(QGroupBox, ui_history.Ui_History):
     def __init__(self, parent):
         super(GuiHistoryWindow, self).__init__()
         self.parent = parent
-        with open(self.parent.config.get_history_config_filename()) as f:
+        tmp = self.parent.config.get_history_config_filename()
+        if not os.path.exists(tmp):
+            with open(tmp, 'w') as f:
+                t0 = {'history': {'hex': [], 'text': []}}
+                yaml.safe_dump(t0, f)
+        with open(tmp, 'r') as f:
             self.history = yaml.safe_load(f)
 
     def setupUi(self, p_wnd):
