@@ -2,4 +2,5 @@ pyside6
 coloredlogs
 pyserial
 pyyaml
+pillow
 
